@@ -64,6 +64,7 @@
   $('command-form').onsubmit = event => { event.preventDefault(); dispatch($('command').value); };
   if (!apiUrl) say(publicSync ? 'เว็บนี้แสดงงานจากบอต Telegram แบบอ่านอย่างเดียว กดสรุปงานหรือค้นงานได้' : localSync ? 'ใช้คำสั่งพื้นฐาน ข้อมูลงานซิงก์กับบอต Telegram บนเครื่องนี้' : 'AI สนทนายังไม่เชื่อมต่อ ตอนนี้ใช้คำสั่งพื้นฐาน ข้อมูลงานเก็บเฉพาะเบราว์เซอร์นี้');
   if (localSync || publicSync) refreshLocal().then(() => render()).catch(() => {});
+  if (publicSync) setInterval(() => refreshLocal().then(() => render()).catch(() => {}), 30000);
   else { $('access-code').value = sessionStorage.getItem('checkcom-access-code') || ''; $('access-code').addEventListener('change', () => sessionStorage.setItem('checkcom-access-code', $('access-code').value)); }
   const Recognition = window.SpeechRecognition || window.webkitSpeechRecognition;
   if (!Recognition) { $('mic').disabled = true; say('เบราว์เซอร์นี้ไม่รองรับการรู้จำเสียง ใช้ช่องพิมพ์คำสั่งแทนได้'); return; }
