@@ -1,0 +1,301 @@
+<!doctype html>
+<html lang="lo">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Document Manager Dashboard</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f4f7f6;
+      --ink: #17211f;
+      --muted: #66736f;
+      --line: #d7dfdc;
+      --panel: #ffffff;
+      --soft: #edf4f1;
+      --brand: #0f766e;
+      --brand-dark: #115e59;
+      --accent: #b45309;
+      --danger: #b91c1c;
+      --blue: #2563eb;
+      --shadow: 0 14px 38px rgba(18, 33, 30, .08);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Noto Sans Lao", "Segoe UI", Tahoma, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+    }
+    button, input, select, textarea { font: inherit; }
+    button { border: 1px solid var(--line); background: var(--panel); color: var(--ink); border-radius: 6px; padding: 9px 12px; cursor: pointer; }
+    button.primary { background: var(--brand); border-color: var(--brand); color: #fff; }
+    button.primary:hover { background: var(--brand-dark); }
+    button.danger { color: var(--danger); border-color: #efcaca; }
+    button.icon { width: 38px; height: 38px; display: inline-grid; place-items: center; padding: 0; }
+    button:disabled { opacity: .55; cursor: not-allowed; }
+    .shell { min-height: 100vh; display: grid; grid-template-columns: 292px minmax(0, 1fr); }
+    aside { background: #182724; color: #f8fbfa; padding: 22px 18px; }
+    main { min-width: 0; padding: 24px; }
+    .brand { display: flex; gap: 11px; align-items: center; margin-bottom: 22px; }
+    .mark { width: 40px; height: 40px; border-radius: 8px; background: var(--accent); display: grid; place-items: center; font-weight: 800; }
+    h1, h2, h3, p { margin: 0; }
+    h1 { font-size: 25px; line-height: 1.18; letter-spacing: 0; }
+    h2 { font-size: 17px; letter-spacing: 0; }
+    h3 { font-size: 14px; }
+    .muted { color: var(--muted); }
+    aside .muted { color: #bdcbc7; }
+    .side-block { display: grid; gap: 12px; margin-bottom: 18px; }
+    .field { display: grid; gap: 6px; }
+    label { font-size: 12px; color: inherit; opacity: .88; }
+    input, select, textarea { width: 100%; border: 1px solid var(--line); border-radius: 6px; background: #fff; color: var(--ink); padding: 10px 11px; }
+    aside input, aside select { border-color: rgba(255,255,255,.18); }
+    .note { font-size: 12px; line-height: 1.55; }
+    .topbar { display: flex; justify-content: space-between; align-items: end; gap: 16px; margin-bottom: 18px; }
+    .actions { display: flex; flex-wrap: wrap; gap: 8px; justify-content: flex-end; }
+    .kpis { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin-bottom: 16px; }
+    .card { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; box-shadow: var(--shadow); min-width: 0; }
+    .kpi { padding: 15px; }
+    .kpi .value { font-size: 26px; font-weight: 800; margin-top: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .kpi .sub { color: var(--muted); font-size: 12px; margin-top: 4px; }
+    .summary { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr); gap: 16px; margin-bottom: 16px; align-items: stretch; }
+    .panel { padding: 15px; }
+    .panel-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 12px; }
+    .bars { display: grid; gap: 9px; }
+    .bar-row { display: grid; grid-template-columns: 115px minmax(0,1fr) 82px; gap: 9px; align-items: center; font-size: 13px; }
+    .track { height: 14px; background: var(--soft); border-radius: 4px; overflow: hidden; }
+    .fill { height: 100%; background: var(--brand); }
+    .activity { display: grid; gap: 10px; }
+    .activity-item { display: flex; justify-content: space-between; gap: 12px; padding-bottom: 9px; border-bottom: 1px solid var(--line); font-size: 13px; }
+    .table-card { overflow: hidden; }
+    .table-tools { display: grid; grid-template-columns: minmax(220px, 1fr) 150px 150px auto; gap: 10px; padding: 14px; border-bottom: 1px solid var(--line); align-items: center; }
+    .table-wrap { overflow: auto; max-height: 52vh; }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    th, td { padding: 10px 12px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: middle; white-space: nowrap; }
+    th { color: var(--muted); font-size: 12px; font-weight: 750; position: sticky; top: 0; background: #fbfcfc; z-index: 1; }
+    tr:hover td { background: #f8fbfa; }
+    .name-cell { min-width: 280px; max-width: 430px; white-space: normal; word-break: break-word; font-weight: 650; }
+    .pill { display: inline-flex; align-items: center; height: 24px; padding: 0 8px; border-radius: 999px; background: var(--soft); color: var(--brand-dark); font-size: 12px; font-weight: 700; }
+    .row-actions { display: flex; gap: 6px; }
+    dialog { border: 1px solid var(--line); border-radius: 8px; box-shadow: 0 24px 70px rgba(0,0,0,.24); width: min(720px, calc(100vw - 24px)); padding: 0; }
+    dialog::backdrop { background: rgba(10,20,18,.45); }
+    .modal { padding: 16px; display: grid; gap: 13px; }
+    .modal-head { display: flex; justify-content: space-between; gap: 12px; align-items: center; }
+    textarea { min-height: 300px; resize: vertical; font-family: Consolas, "Noto Sans Lao", monospace; line-height: 1.5; }
+    .empty { padding: 34px 16px; text-align: center; color: var(--muted); border: 1px dashed var(--line); border-radius: 8px; background: #fff; }
+    .status { margin-top: 8px; min-height: 20px; font-size: 12px; color: #d9f7ef; }
+    @media (max-width: 1020px) { .shell { grid-template-columns: 1fr; } .kpis { grid-template-columns: repeat(2, minmax(0,1fr)); } .summary { grid-template-columns: 1fr; } .table-tools { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 640px) { main { padding: 16px; } .topbar { flex-direction: column; align-items: stretch; } .actions { justify-content: stretch; } .actions button { flex: 1; } .kpis, .table-tools { grid-template-columns: 1fr; } .bar-row { grid-template-columns: 84px minmax(0,1fr) 68px; } }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <aside>
+      <div class="brand">
+        <div class="mark">DOC</div>
+        <div>
+          <h1>ແດດບັອດເອກະສານ</h1>
+          <p class="muted">ຈັດການໄຟລ໌ໃນໂຟນເດີທີ່ເລືອກ</p>
+        </div>
+      </div>
+      <div class="side-block">
+        <button id="pickFolder" class="primary" type="button">ເລືອກໂຟນເດີ</button>
+        <button id="scanDesktop" type="button">ໂຫຼດລາຍການ Desktop</button>
+        <div id="sideStatus" class="status">ມີລາຍການ Desktop ທີ່ສະແກນແລ້ວ. ກົດເລືອກໂຟນເດີເພື່ອແກ້ໄຂໄຟລ໌ຈິງ.</div>
+      </div>
+      <div class="side-block">
+        <div class="field"><label for="typeFilter">ປະເພດໄຟລ໌</label><select id="typeFilter"><option value="all">ທັງໝົດ</option></select></div>
+        <div class="field"><label for="sortBy">ຮຽງຕາມ</label><select id="sortBy"><option value="modified">ອັບເດດຫຼ້າສຸດ</option><option value="name">ຊື່ໄຟລ໌</option><option value="size">ຂະໜາດ</option><option value="type">ປະເພດ</option></select></div>
+      </div>
+      <p class="note muted">ກົດ “ເລືອກໂຟນເດີ” ເພື່ອເບິ່ງເອກະສານໃນເຄື່ອງຂອງທ່ານ. ຖ້າຕ້ອງການປ່ຽນຊື່/ລຶບຟາຍຈິງ ໃຫ້ກົດ “ເລືອກໂຟນເດີ”.</p>
+    </aside>
+    <main>
+      <div class="topbar">
+        <div>
+          <h1>Document Manager Dashboard</h1>
+          <p id="folderLabel" class="muted">ຍັງບໍ່ໄດ້ເລືອກໂຟນເດີ</p>
+        </div>
+        <div class="actions">
+          <button id="refreshBtn" type="button">↻ ໂຫຼດໃໝ່</button>
+          <button id="newTextBtn" type="button">＋ ສ້າງ Note</button>
+        </div>
+      </div>
+      <section class="kpis" aria-label="ສະຫຼຸບ">
+        <div class="card kpi"><div class="muted">ໄຟລ໌ທັງໝົດ</div><div id="kpiFiles" class="value">0</div><div class="sub">ເອກະສານທີ່ພົບ</div></div>
+        <div class="card kpi"><div class="muted">ຂະໜາດລວມ</div><div id="kpiSize" class="value">0 KB</div><div class="sub">ໃນໂຟນເດີທີ່ເລືອກ</div></div>
+        <div class="card kpi"><div class="muted">ແກ້ໄຂມື້ນີ້</div><div id="kpiToday" class="value">0</div><div class="sub">ອີງຕາມ modified date</div></div>
+        <div class="card kpi"><div class="muted">ປະເພດຫຼັກ</div><div id="kpiTopType" class="value">-</div><div class="sub">ປະເພດທີ່ມີຫຼາຍສຸດ</div></div>
+      </section>
+      <section class="summary">
+        <article class="card panel"><div class="panel-head"><h2>ສະຫຼຸບຕາມປະເພດ</h2><span class="muted">ຈຳນວນໄຟລ໌</span></div><div id="typeBars" class="bars"></div></article>
+        <article class="card panel"><div class="panel-head"><h2>ໄຟລ໌ທີ່ແກ້ໄຂຫຼ້າສຸດ</h2><span class="muted">Top 6</span></div><div id="recentList" class="activity"></div></article>
+      </section>
+      <section class="summary">
+        <article class="card panel"><div class="panel-head"><h2>ຟາຍຄ້າຍກັນ / ຄວນແຍກ</h2><span class="muted">ອີງຈາກເນື້ອໃນ</span></div><div id="similarGroups" class="activity"></div></article>
+        <article class="card panel"><div class="panel-head"><h2>ຄຳສຳຄັນຂອງໄຟລ໌</h2><span class="muted">Word + Excel</span></div><div id="keywordList" class="activity"></div></article>
+      </section>
+      <section class="card table-card">
+        <div class="table-tools">
+          <input id="searchBox" type="search" placeholder="ຄົ້ນຫາຊື່ໄຟລ໌...">
+          <select id="editableFilter"><option value="all">ທັງໝົດ</option><option value="editable">ແກ້ໄຂໄດ້</option><option value="office">Word / Excel</option></select>
+          <button id="selectAllBtn" type="button">ເລືອກທັງໝົດ</button>
+          <button id="deleteSelectedBtn" class="danger" type="button">ລຶບທີ່ເລືອກ</button>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th></th><th>ຊື່ໄຟລ໌</th><th>ຫົວຂໍ້/ເນື້ອໃນ</th><th>ປະເພດ</th><th>ຂະໜາດ</th><th>ແກ້ໄຂຫຼ້າສຸດ</th><th>ຈັດການ</th></tr></thead>
+            <tbody id="fileRows"><tr><td colspan="7"><div class="empty">ກຳລັງໂຫຼດລາຍການ Desktop...</div></td></tr></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+  </div>
+  <dialog id="editDialog"><form method="dialog" class="modal"><div class="modal-head"><div><h2 id="editTitle">ແກ້ໄຂໄຟລ໌</h2><p id="editMeta" class="muted"></p></div><button class="icon" value="cancel" type="submit">×</button></div><textarea id="editor"></textarea><div class="actions"><button value="cancel" type="submit">ຍົກເລີກ</button><button id="saveEdit" class="primary" value="default" type="button">ບັນທຶກ</button></div></form></dialog>
+  <script>
+    const preloadedDesktop = { files: [], groups: [] };
+    const docExts = new Set(["doc","docx","xls","xlsx","ppt","pptx","pdf","txt","csv","md","rtf","html","htm","json","xml"]);
+    const editableExts = new Set(["txt","csv","md","html","htm","json","xml","log","ini","css","js"]);
+    const officeExts = new Set(["doc","docx","xls","xlsx","ppt","pptx","pdf","rtf"]);
+    let directoryHandle = null;
+    let files = [];
+    let selected = new Set();
+    let editing = null;
+    const $ = id => document.getElementById(id);
+    const fmtDate = new Intl.DateTimeFormat("lo-LA", { dateStyle: "medium", timeStyle: "short" });
+    function ext(name) { const part = name.split(".").pop(); return part && part !== name ? part.toLowerCase() : "none"; }
+    function typeLabel(e) { return e === "none" ? "ບໍ່ມີນາມສະກຸນ" : e.toUpperCase(); }
+    function formatBytes(bytes) { if (!bytes) return "0 KB"; const units = ["B","KB","MB","GB"]; let n = bytes, i = 0; while (n >= 1024 && i < units.length - 1) { n /= 1024; i++; } return `${n.toFixed(n >= 10 || i === 0 ? 0 : 1)} ${units[i]}`; }
+    function isToday(ts) { const d = new Date(ts), n = new Date(); return d.getFullYear() === n.getFullYear() && d.getMonth() === n.getMonth() && d.getDate() === n.getDate(); }
+    async function scanDirectory() {
+      if (!directoryHandle) return;
+      files = [];
+      selected.clear();
+      for await (const entry of directoryHandle.values()) {
+        if (entry.kind !== "file") continue;
+        const e = ext(entry.name);
+        if (!docExts.has(e)) continue;
+        const file = await entry.getFile();
+        files.push({ name: entry.name, ext: e, size: file.size, modified: file.lastModified, handle: entry, title: entry.name, preview: "", keywords: [] });
+      }
+      $("folderLabel").textContent = `ໂຟນເດີ: ${directoryHandle.name}`;
+      $("sideStatus").textContent = `ພົບ ${files.length} ໄຟລ໌ເອກະສານ`;
+      window.currentGroups = [];
+      fillTypeFilter(); render();
+    }
+    function fillTypeFilter() {
+      const current = $("typeFilter").value;
+      const types = [...new Set(files.map(f => f.ext))].sort();
+      $("typeFilter").innerHTML = `<option value="all">ທັງໝົດ</option>` + types.map(t => `<option value="${t}">${typeLabel(t)}</option>`).join("");
+      $("typeFilter").value = types.includes(current) ? current : "all";
+    }
+    function filteredFiles() {
+      const q = $("searchBox").value.trim().toLowerCase();
+      const type = $("typeFilter").value;
+      const ed = $("editableFilter").value;
+      const sort = $("sortBy").value;
+      return files.filter(f => (!q || f.name.toLowerCase().includes(q)) && (type === "all" || f.ext === type) && (ed === "all" || (ed === "editable" ? editableExts.has(f.ext) : officeExts.has(f.ext))))
+        .sort((a,b) => sort === "name" ? a.name.localeCompare(b.name) : sort === "size" ? b.size - a.size : sort === "type" ? a.ext.localeCompare(b.ext) || a.name.localeCompare(b.name) : b.modified - a.modified);
+    }
+    function render() { renderKpis(); renderBars(); renderRecent(); renderSimilarGroups(); renderKeywords(); renderTable(); }
+    function renderKpis() {
+      const total = files.reduce((s,f) => s + f.size, 0);
+      const counts = countBy(files, f => f.ext);
+      const top = Object.entries(counts).sort((a,b) => b[1]-a[1])[0];
+      $("kpiFiles").textContent = files.length;
+      $("kpiSize").textContent = formatBytes(total);
+      $("kpiToday").textContent = files.filter(f => isToday(f.modified)).length;
+      $("kpiTopType").textContent = top ? typeLabel(top[0]) : "-";
+    }
+    function countBy(list, fn) { return list.reduce((m,x) => (m[fn(x)] = (m[fn(x)] || 0) + 1, m), {}); }
+    function renderBars() {
+      const entries = Object.entries(countBy(files, f => f.ext)).sort((a,b) => b[1]-a[1]);
+      const max = Math.max(1, ...entries.map(x => x[1]));
+      $("typeBars").innerHTML = entries.length ? entries.map(([e,c]) => `<div class="bar-row"><strong>${typeLabel(e)}</strong><div class="track"><div class="fill" style="width:${(c/max)*100}%"></div></div><span class="muted">${c} ໄຟລ໌</span></div>`).join("") : `<div class="empty">ຍັງບໍ່ມີຂໍ້ມູນ</div>`;
+    }
+    function renderRecent() {
+      const recent = [...files].sort((a,b) => b.modified-a.modified).slice(0,6);
+      $("recentList").innerHTML = recent.length ? recent.map(f => `<div class="activity-item"><div><strong>${escapeHtml(f.name)}</strong><div class="muted">${typeLabel(f.ext)} · ${formatBytes(f.size)}</div></div><span>${fmtDate.format(new Date(f.modified))}</span></div>`).join("") : `<div class="empty">ຍັງບໍ່ມີໄຟລ໌</div>`;
+    }
+        function renderSimilarGroups() {
+      const groups = (window.currentGroups || []).filter(g => g.members && g.members.length > 1);
+      $("similarGroups").innerHTML = groups.length ? groups.map(g => `<div class="activity-item"><div><strong>${escapeHtml(g.label)}</strong><div class="muted">${g.members.map(m => `${escapeHtml(m.name)} (${Math.round((m.score || 0) * 100)}%)`).join(" · ")}</div></div><span class="pill">${g.members.length} ໄຟລ໌</span></div>`).join("") : `<div class="empty">ບໍ່ພົບກຸ່ມທີ່ຄ້າຍກັນ</div>`;
+    }
+    function renderKeywords() {
+      const top = [...files].filter(f => f.keywords && f.keywords.length).slice(0, 6);
+      $("keywordList").innerHTML = top.length ? top.map(f => `<div class="activity-item"><div><strong>${escapeHtml(f.name)}</strong><div class="muted">${f.keywords.slice(0, 7).map(escapeHtml).join(" · ")}</div></div><span>${f.wordCount || 0}</span></div>`).join("") : `<div class="empty">ບໍ່ມີຄຳສຳຄັນ</div>`;
+    }
+    function renderTable() {
+      const list = filteredFiles();
+      $("fileRows").innerHTML = list.length ? list.map(f => `<tr><td><input type="checkbox" data-select="${escapeHtml(f.name)}" ${selected.has(f.name) ? "checked" : ""}></td><td class="name-cell">${escapeHtml(f.name)}</td><td class="name-cell"><strong>${escapeHtml(f.title || "-")}</strong><div class="muted">${escapeHtml(f.preview || f.readNote || "ຍັງບໍ່ມີ preview")}</div></td><td><span class="pill">${typeLabel(f.ext)}</span></td><td>${formatBytes(f.size)}</td><td>${fmtDate.format(new Date(f.modified))}</td><td><div class="row-actions"><button title="ເປີດ/ອ່ານ" data-open="${escapeHtml(f.name)}">ເປີດ</button><button title="ປ່ຽນຊື່" data-rename="${escapeHtml(f.name)}">ປ່ຽນຊື່</button><button title="ແກ້ໄຂ" data-edit="${escapeHtml(f.name)}" ${editableExts.has(f.ext) ? "" : "disabled"}>ແກ້ໄຂ</button><button class="danger" title="ລຶບ" data-delete="${escapeHtml(f.name)}">ລຶບ</button></div></td></tr>`).join("") : `<tr><td colspan="7"><div class="empty">ບໍ່ພົບໄຟລ໌ຕາມຕົວກອງ</div></td></tr>`;
+    }
+    function escapeHtml(v) { return String(v).replace(/[&<>"']/g, ch => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[ch])); }
+    function findFile(name) { return files.find(f => f.name === name); }
+    async function renameFile(name) {
+      const item = findFile(name); if (!item || !directoryHandle) return;
+      const next = prompt("ຊື່ໃໝ່", item.name); if (!next || next === item.name) return;
+      const oldFile = await item.handle.getFile();
+      const newHandle = await directoryHandle.getFileHandle(next, { create: true });
+      const writer = await newHandle.createWritable(); await writer.write(await oldFile.arrayBuffer()); await writer.close();
+      await directoryHandle.removeEntry(item.name); await scanDirectory();
+    }
+    async function deleteFile(name) { if (!directoryHandle || !confirm(`ລຶບ ${name}?`)) return; await directoryHandle.removeEntry(name); await scanDirectory(); }
+    async function openFile(name) {
+      const item = findFile(name); if (!item) return;
+      const file = await item.handle.getFile();
+      const url = URL.createObjectURL(file);
+      window.open(url, "_blank"); setTimeout(() => URL.revokeObjectURL(url), 60000);
+    }
+    async function editFile(name) {
+      const item = findFile(name); if (!item || !editableExts.has(item.ext)) return;
+      const file = await item.handle.getFile(); editing = item;
+      $("editTitle").textContent = item.name; $("editMeta").textContent = `${typeLabel(item.ext)} · ${formatBytes(item.size)}`;
+      $("editor").value = await file.text(); $("editDialog").showModal();
+    }
+    async function saveEdit() {
+      if (!editing) return;
+      const writer = await editing.handle.createWritable(); await writer.write($("editor").value); await writer.close();
+      $("editDialog").close(); editing = null; await scanDirectory();
+    }
+    async function createNote() {
+      if (!directoryHandle) { alert("ກະລຸນາເລືອກໂຟນເດີກ່ອນ"); return; }
+      const name = prompt("ຊື່ໄຟລ໌ note", `note-${new Date().toISOString().slice(0,10)}.txt`); if (!name) return;
+      const handle = await directoryHandle.getFileHandle(name, { create: true });
+      const writer = await handle.createWritable(); await writer.write(""); await writer.close(); await scanDirectory(); editFile(name);
+    }
+    $("pickFolder").addEventListener("click", async () => {
+      if (!window.showDirectoryPicker) { alert("Browser ນີ້ບໍ່ຮອງຮັບ File System Access API. ແນະນຳໃຊ້ Chrome ຫຼື Edge."); return; }
+      directoryHandle = await window.showDirectoryPicker({ mode: "readwrite" }); await scanDirectory();
+    });
+    $("scanDesktop").addEventListener("click", () => {
+      files = preloadedDesktop.files.map(f => ({ ...f }));
+      selected.clear();
+      window.currentGroups = preloadedDesktop.groups || [];
+      directoryHandle = null;
+      $("folderLabel").textContent = "ລາຍການ Word/Excel ຈາກ Desktop - ສະແກນເນື້ອໃນແລ້ວ";
+      $("sideStatus").textContent = `ໂຫຼດ ${files.length} ໄຟລ໌; ພົບ ${(window.currentGroups || []).length} ກຸ່ມຄ້າຍກັນ.`;
+      window.currentGroups = [];
+      fillTypeFilter(); render();
+    });
+    $("refreshBtn").addEventListener("click", scanDirectory);
+    $("newTextBtn").addEventListener("click", createNote);
+    $("saveEdit").addEventListener("click", saveEdit);
+    ["searchBox","typeFilter","editableFilter","sortBy"].forEach(id => $(id).addEventListener("input", render));
+    $("scanDesktop").click();
+    $("fileRows").addEventListener("click", e => {
+      const btn = e.target.closest("button"); if (!btn) return;
+      const name = btn.dataset.open || btn.dataset.rename || btn.dataset.edit || btn.dataset.delete;
+      if (!directoryHandle && !btn.dataset.open) { alert("ໂໝດ Desktop preload ແກ້ໄຂໄຟລ໌ຈິງບໍ່ໄດ້. ກົດເລືອກໂຟນເດີກ່ອນ."); return; }
+      if (btn.dataset.open) openFile(name); if (btn.dataset.rename) renameFile(name); if (btn.dataset.edit) editFile(name); if (btn.dataset.delete) deleteFile(name);
+    });
+    $("fileRows").addEventListener("change", e => { if (!e.target.matches("[data-select]")) return; e.target.checked ? selected.add(e.target.dataset.select) : selected.delete(e.target.dataset.select); });
+    $("selectAllBtn").addEventListener("click", () => { filteredFiles().forEach(f => selected.add(f.name)); renderTable(); });
+    $("deleteSelectedBtn").addEventListener("click", async () => { if (!directoryHandle || !selected.size) return; if (!confirm(`ລຶບ ${selected.size} ໄຟລ໌?`)) return; for (const name of [...selected]) await directoryHandle.removeEntry(name); await scanDirectory(); });
+  </script>
+</body>
+</html>
+
+
+
+
+
+

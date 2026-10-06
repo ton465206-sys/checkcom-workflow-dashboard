@@ -57,6 +57,7 @@
     if (/^(?:สรุปงาน|ดูงาน|รายการงาน|ສະຫຼຸບວຽກ)$/i.test(command)) { render(); return say(`มี ${tasks.length} งาน เสร็จแล้ว ${tasks.filter(t => t.status === 'เสร็จแล้ว').length} งาน`); }
     if (/(?:เวิร์กโฟลว์|workflow|ວຽກ)/i.test(command)) { document.querySelector('[data-page="workflow"]').click(); return say('เปิด Workflow แล้ว'); }
     if (/(?:แดชบอร์ด|dashboard|ยอดขาย|ทีมขาย)/i.test(command)) { document.querySelector('[data-page="sales"]').click(); return say('เปิด Dashboard ทีมขายแล้ว'); }
+    if (/(?:เอกสาร|document)/i.test(command)) { document.querySelector('[data-page="documents"]').click(); return say('เปิดส่วนเอกสารแล้ว'); }
     say('ยังไม่เข้าใจคำสั่ง ลอง “เพิ่มงาน …”, “ค้นงาน …”, “ปิดงาน 1”, “สรุปงาน” หรือ “เปิดแดชบอร์ด”');
   }
   const dispatch = command => apiUrl ? runAi(command) : run(command);

@@ -19,6 +19,7 @@
   <nav aria-label="เลือกส่วนงาน">
     <button type="button" data-page="workflow" aria-selected="true">Workflow แผนก</button>
     <button type="button" data-page="sales" aria-selected="false">Dashboard ทีมขาย</button>
+    <button type="button" data-page="documents" aria-selected="false">จัดการเอกสาร</button>
   </nav>
   <main>
     <p class="intro" id="description">ภาพรวมขั้นตอนงานและ KPI รายแผนก</p>
@@ -28,11 +29,13 @@
     <section class="tasks" id="tasks" hidden><h2>งานที่สั่งผ่านผู้ช่วย</h2><ul id="task-list"></ul></section>
     <iframe class="frame" id="workflow" title="Workflow แผนก" src="apps/workflow/index.html"></iframe>
     <iframe class="frame" id="sales" title="Dashboard ทีมขาย" src="apps/sales/index.html" hidden></iframe>
+    <iframe class="frame" id="documents" title="จัดการเอกสาร" src="apps/documents/index.html" hidden></iframe>
   </main>
   <script>
     const pages={
       workflow:{description:'ภาพรวมขั้นตอนงานและ KPI รายแผนก'},
-      sales:{description:'งานมอบหมาย ลูกค้า และ KPI ของทีมขาย Mungmee IT'}
+      sales:{description:'งานมอบหมาย ลูกค้า และ KPI ของทีมขาย Mungmee IT'},
+      documents:{description:'จัดการเอกสารจากโฟลเดอร์ที่ผู้ใช้เลือก'}
     };
     const description=document.getElementById('description');
     function show(page){page=pages[page]?page:'workflow';description.textContent=pages[page].description;document.querySelectorAll('main iframe').forEach(frame=>frame.hidden=frame.id!==page);document.querySelectorAll('nav button').forEach(button=>button.setAttribute('aria-selected',button.dataset.page===page));location.hash=page;}
