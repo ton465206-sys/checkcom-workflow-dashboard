@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="lo">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Department Workflow Analytics Dashboard</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <aside class="sidebar" aria-label="Main navigation">
+        <div class="brand">
+          <span class="brand-mark"></span>
+          <strong>WORKFLOWX</strong>
+        </div>
+        <nav class="nav-list">
+          <a class="active" href="#overview">Dashboard</a>
+          <a href="#workflow">Workflow</a>
+          <a href="#departments">Departments</a>
+          <a href="#kpis">KPIs</a>
+          <a href="#analysis">Analysis</a>
+        </nav>
+        <div class="side-note">
+          <span>Demo Mode</span>
+          <strong>Aug 2026</strong>
+        </div>
+      </aside>
+
+      <section class="dashboard">
+        <header class="topbar">
+          <div>
+            <p class="eyebrow">Real-time Business Performance</p>
+            <h1>ວິເຄາະ Workflow ແຕ່ລະພະແນກ</h1>
+          </div>
+          <div class="search-box">Search department / KPI</div>
+          <div class="user-chip">A. Chen</div>
+        </header>
+
+        <section id="overview" class="metric-grid" aria-label="Main KPI cards"></section>
+
+        <section class="main-grid">
+          <article class="panel trend-panel">
+            <div class="panel-head">
+              <div>
+                <h2>Department Performance Trend</h2>
+                <p>ຄະແນນປະສິດທິພາບຕາມຂັ້ນຕອນ workflow</p>
+              </div>
+              <div class="segmented">
+                <button class="active">1M</button>
+                <button>3M</button>
+                <button>YTD</button>
+              </div>
+            </div>
+            <div class="line-chart" aria-label="Performance line chart">
+              <svg viewBox="0 0 760 260" role="img">
+                <defs>
+                  <linearGradient id="lineFill" x1="0" x2="0" y1="0" y2="1">
+                    <stop offset="0%" stop-color="#ff8a2a" stop-opacity="0.48" />
+                    <stop offset="100%" stop-color="#20d2c7" stop-opacity="0.02" />
+                  </linearGradient>
+                </defs>
+                <g class="grid-lines"></g>
+                <path class="area-path" d=""></path>
+                <path class="line-path primary" d=""></path>
+                <path class="line-path target" d=""></path>
+                <g class="plot-points"></g>
+              </svg>
+            </div>
+          </article>
+
+          <article class="panel compact">
+            <h2>Risk & Bottleneck</h2>
+            <div class="risk-list" id="riskList"></div>
+          </article>
+
+          <article id="workflow" class="panel workflow-panel">
+            <div class="panel-head">
+              <div>
+                <h2>Workflow Map</h2>
+                <p>Marketing → Sale Support / PO → Technical → Finance, HR ສະໜັບສະໜູນທຸກຈຸດ</p>
+              </div>
+            </div>
+            <div class="flow-row" id="workflowRow"></div>
+          </article>
+
+          <article class="panel compact">
+            <h2>Overall Score</h2>
+            <div class="donut-wrap">
+              <div class="donut" id="overallDonut"><span>0%</span></div>
+              <ul class="legend" id="legend"></ul>
+            </div>
+          </article>
+        </section>
+
+        <section id="departments" class="department-grid" aria-label="Department cards"></section>
+
+        <section id="analysis" class="panel analysis-panel">
+          <div class="panel-head">
+            <div>
+              <h2>ສະຫຼຸບການວິເຄາະ</h2>
+              <p>ຕົວເລກ demo ສາມາດປັບໄດ້ໃນ app.js ເພື່ອໃຫ້ກົງກັບຂໍ້ມູນຈິງ</p>
+            </div>
+          </div>
+          <div class="analysis-table" id="analysisTable"></div>
+        </section>
+      </section>
+    </main>
+    <script src="app.js"></script>
+  </body>
+</html>
