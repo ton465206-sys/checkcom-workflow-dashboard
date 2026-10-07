@@ -11,7 +11,7 @@
     button{border:1px solid #b9ced1;border-radius:10px;background:white;color:#16444d;padding:11px 16px;font:inherit;cursor:pointer}
     button[aria-selected=true]{background:#126b76;color:white;border-color:#126b76}button:focus-visible{outline:3px solid #e3a831;outline-offset:2px}
     main{padding:18px clamp(20px,4vw,56px)}.intro{margin:0 0 12px;color:#47656b}.frame{width:100%;height:calc(100vh - 222px);min-height:520px;border:1px solid #d2e0e2;border-radius:12px;background:white}
-    .frame[hidden]{display:none}.assistant{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:0 0 14px}.assistant input{flex:1;min-width:220px;padding:11px;border:1px solid #b9ced1;border-radius:10px;font:inherit}.assistant select{padding:11px;border:1px solid #b9ced1;border-radius:10px}.voice-result{min-height:24px;margin:0 0 10px;color:#16444d}.tasks{background:#fff;border:1px solid #d2e0e2;border-radius:12px;padding:14px;margin-bottom:14px}.tasks[hidden]{display:none}.tasks ul{margin:8px 0;padding-left:22px}.tasks li{padding:4px 0}.tasks h2{font-size:1.1rem;margin:0}.confirm{background:#fff4d8;border:1px solid #d9ac51;padding:10px;border-radius:9px;margin-bottom:10px}.confirm[hidden]{display:none}
+    .frame[hidden],.assistant input[hidden]{display:none}.assistant{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:0 0 14px}.assistant input{flex:1;min-width:220px;padding:11px;border:1px solid #b9ced1;border-radius:10px;font:inherit}.assistant select{padding:11px;border:1px solid #b9ced1;border-radius:10px}.voice-result{min-height:24px;margin:0 0 10px;color:#16444d}.voice-result button{margin:8px 0}.tasks{background:#fff;border:1px solid #d2e0e2;border-radius:12px;padding:14px;margin-bottom:14px}.tasks[hidden]{display:none}.tasks ul{margin:8px 0;padding-left:22px}.tasks li{padding:4px 0}.tasks h2{font-size:1.1rem;margin:0}.confirm{background:#fff4d8;border:1px solid #d9ac51;padding:10px;border-radius:9px;margin-bottom:10px}.confirm[hidden]{display:none}
   </style>
 </head>
 <body>
@@ -43,6 +43,6 @@
     if(pages[location.hash.slice(1)])show(location.hash.slice(1));
   </script>
   <script src="assistant-config.js"></script>
-  <script src="assistant.js"></script>
+  <script src="assistant.js?v=2"></script>
 </body>
 </html>
