@@ -51,9 +51,13 @@
   function render(items = tasks) {
     $('tasks').hidden = false;
     $('task-list').replaceChildren();
-    if (!items.length) { const li = document.createElement('li'); li.textContent = 'ยังไม่มีงาน'; $('task-list').append(li); return; }
-    items.forEach(task => { const li = document.createElement('li'); li.textContent = `${task.id}. ${task.title} — ${task.status}`; $('task-list').append(li); });
+    const query = ($('task-filter')?.value || '').toLocaleLowerCase().trim();
+    const found = query ? items.filter(task => `${task.title} ${task.segment || ''}`.toLocaleLowerCase().includes(query)) : items;
+    $('task-count').textContent = `พบ ${found.length} จาก ${tasks.length} รายการ${found.length > 30 ? ' (แสดง 30 รายการแรก)' : ''}`;
+    if (!found.length) { const li = document.createElement('li'); li.textContent = 'ไม่พบรายการ'; $('task-list').append(li); return; }
+    found.slice(0, 30).forEach(task => { const li = document.createElement('li'); li.textContent = `#${task.id} ${task.title} (${task.segment || 'อื่น ๆ'}) — ${task.stage || task.status}`; $('task-list').append(li); });
   }
+  $('task-filter')?.addEventListener('input', () => render());
   function confirm(message, action) { pending = action; $('confirm-text').textContent = message; $('confirm').hidden = false; }
   $('confirm-yes').onclick = async () => { const action = pending; pending = null; $('confirm').hidden = true; try { if (action) await action(); } catch (error) { say(error.message); } };
   $('confirm-no').onclick = () => { pending = null; $('confirm').hidden = true; say('ยกเลิกแล้ว'); };
@@ -79,7 +83,7 @@
   const dispatch = command => apiUrl ? runAi(command) : run(command);
   if (!apiUrl) $('access-code').hidden = true;
   $('command-form').onsubmit = event => { event.preventDefault(); dispatch($('command').value); };
-  if (!apiUrl) say(publicSync ? 'ค้นหาและสรุปงานได้ที่นี่ คำสั่งเพิ่มหรือแก้งานจะส่งต่อไปยังบอต Telegram' : localSync ? 'ใช้คำสั่งพื้นฐาน ข้อมูลงานซิงก์กับบอต Telegram บนเครื่องนี้' : 'AI สนทนายังไม่เชื่อมต่อ ตอนนี้ใช้คำสั่งพื้นฐาน ข้อมูลงานเก็บเฉพาะเบราว์เซอร์นี้');
+  if (!apiUrl) say(publicSync ? 'ค้นชื่อองค์กรและดูขั้นตอนได้ที่นี่ อัปเดตขั้นตอนด้วยบอต Telegram' : localSync ? 'ใช้คำสั่งพื้นฐาน ข้อมูลงานซิงก์กับบอต Telegram บนเครื่องนี้' : 'AI สนทนายังไม่เชื่อมต่อ ตอนนี้ใช้คำสั่งพื้นฐาน ข้อมูลงานเก็บเฉพาะเบราว์เซอร์นี้');
   if (localSync || publicSync) refreshLocal().then(() => render()).catch(() => {});
   if (publicSync) setInterval(() => refreshLocal().then(() => render()).catch(() => {}), 30000);
   else { $('access-code').value = sessionStorage.getItem('checkcom-access-code') || ''; $('access-code').addEventListener('change', () => sessionStorage.setItem('checkcom-access-code', $('access-code').value)); }

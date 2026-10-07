@@ -1,7 +1,968 @@
 [
   {
     "id": 1,
-    "title": "จดเพื่อตรวจเว็บพรุ่งนี้",
+    "title": "BCEL (HEAD OFFICE)",
+    "segment": "ທະນາຄານ",
+    "stage": "1. Target Lead",
+    "status": "รอดำเนินการ"
+  },
+  {
+    "id": 2,
+    "title": "KASIKORN BANK LIMITED",
+    "segment": "ທະນາຄານ",
+    "stage": "1. Target Lead",
+    "status": "รอดำเนินการ"
+  },
+  {
+    "id": 3,
+    "title": "BIC BANK CO., LTD.",
+    "segment": "ທະນາຄານ",
+    "stage": "1. Target Lead",
+    "status": "รอดำเนินการ"
+  },
+  {
+    "id": 4,
+    "title": "ICBC BANK VIENTIANE",
+    "segment": "ທະນາຄານ",
+    "stage": "1. Target Lead",
+    "status": "รอดำเนินการ"
+  },
+  {
+    "id": 5,
+    "title": "Agriculture Promotion Bank",
+    "segment": "ທະນາຄານ",
+    "stage": "1. Target Lead",
+    "status": "รอดำเนินการ"
+  },
+  {
+    "id": 6,
+    "title": "ACLEDA",
+    "segment": "ທະນາຄານ",
+    "stage": "1. Target Lead",
+    "status": "รอดำเนินการ"
+  },
+  {
+    "id": 7,
+    "title": "Champasak Deposit Taking Microfinance Inst. Ltd",
+    "segment": "ທະນາຄານ",
+    "stage": "1. Target Lead",
+    "status": "รอดำเนินการ"
+  },
+  {
+    "id": 8,
+    "title": "VIETcom",
+    "segment": "ທະນາຄານ",
+    "stage": "1. Target Lead",
+    "status": "รอดำเนินการ"
+  },
+  {
+    "id": 9,
+    "title": "Lao viet",
+    "segment": "ທະນາຄານ",
+    "stage": "1. Target Lead",
+    "status": "รอดำเนินการ"
+  },
+  {
+    "id": 10,
+    "title": "JDB",
+    "segment": "ທະນາຄານ",
+    "stage": "1. Target Lead",
+    "status": "รอดำเนินการ"
+  },
+  {
+    "id": 11,
+    "title": "LDB",
+    "segment": "ທະນາຄານ",
+    "stage": "1. Target Lead",
+    "status": "รอดำเนินการ"
+  },
+  {
+    "id": 12,
+    "title": "INDOCHINA BANK",
+    "segment": "ທະນາຄານ",
+    "stage": "1. Target Lead",
+    "status": "รอดำเนินการ"
+  },
+  {
+    "id": 13,
+    "title": "LAO SECURITIES EXCHANGE (LSX)",
+    "segment": "ທະນາຄານ",
+    "stage": "1. Target Lead",
+    "status": "รอดำเนินการ"
+  },
+  {
+    "id": 14,
+    "title": "LAO CONSTRUCTION BANK LTD",
+    "segment": "ທະນາຄານ",
+    "stage": "1. Target Lead",
+    "status": "รอดำเนินการ"
+  },
+  {
+    "id": 15,
+    "title": "MAY BANK",
+    "segment": "ທະນາຄານ",
+    "stage": "1. Target Lead",
+    "status": "รอดำเนินการ"
+  },
+  {
+    "id": 16,
+    "title": "NTPC2",
+    "segment": "ໂຮງງານ",
+    "stage": "1. Target Lead",
+    "status": "รอดำเนินการ"
+  },
+  {
+    "id": 17,
+    "title": "Nam Ngiep 1 Power Company",
+    "segment": "ໂຮງງານ",
+    "stage": "1. Target Lead",
+    "status": "รอดำเนินการ"
+  },
+  {
+    "id": 18,
+    "title": "NTPC1",
+    "segment": "ໂຮງງານ",
+    "stage": "1. Target Lead",
+    "status": "รอดำเนินการ"
+  },
+  {
+    "id": 19,
+    "title": "LAO COCA COLA BOTTLING CO.,LTD",
+    "segment": "ໂຮງງານ",
+    "stage": "1. Target Lead",
+    "status": "รอดำเนินการ"
+  },
+  {
+    "id": 20,
+    "title": "PHU BIA MINING LIMITED",
+    "segment": "ໂຮງງານ",
+    "stage": "1. Target Lead",
+    "status": "รอดำเนินการ"
+  },
+  {
+    "id": 21,
+    "title": "Beerlao",
+    "segment": "ໂຮງງານ",
+    "stage": "1. Target Lead",
+    "status": "รอดำเนินการ"
+  },
+  {
+    "id": 22,
+    "title": "Electricite du Laosc (EDL-G)",
+    "segment": "ໂຮງງານ",
+    "stage": "1. Target Lead",
+    "status": "รอดำเนินการ"
+  },
+  {
+    "id": 23,
+    "title": "PETROLEUM TRADING LAO PUBLIC COMPANY",
+    "segment": "ໂຮງງານ",
+    "stage": "1. Target Lead",
+    "status": "รอดำเนินการ"
+  },
+  {
+    "id": 24,
+    "title": "Lao Tobacco Limited",
+    "segment": "ໂຮງງານ",
+    "stage": "1. Target Lead",
+    "status": "รอดำเนินการ"
+  },
+  {
+    "id": 25,
+    "title": "MMG-business in crown plaza",
+    "segment": "ໂຮງງານ",
+    "stage": "1. Target Lead",
+    "status": "รอดำเนินการ"
+  },
+  {
+    "id": 26,
+    "title": "MMG-sepon",
+    "segment": "ໂຮງງານ",
+    "stage": "1. Target Lead",
+    "status": "รอดำเนินการ"
+  },
+  {
+    "id": 27,
+    "title": "EDL-G (ບສ ຜະລິດໄຟຟ້າລາວ ມະຫາຊົນ)",
+    "segment": "ໂຮງງານ",
+    "stage": "1. Target Lead",
+    "status": "รอดำเนินการ"
+  },
+  {
+    "id": 28,
+    "title": "Theun-Hinboun Power Company",
+    "segment": "ໂຮງງານ",
+    "stage": "1. Target Lead",
+    "status": "รอดำเนินการ"
+  },
+  {
+    "id": 29,
+    "title": "PHONESACK GROUP CO.,LTD",
+    "segment": "ໂຮງງານ",
+    "stage": "1. Target Lead",
+    "status": "รอดำเนินการ"
+  },
+  {
+    "id": 30,
+    "title": "LAO INDUSTRIAL RESOURCE CO.,LTD",
+    "segment": "ໂຮງງານ",
+    "stage": "1. Target Lead",
+    "status": "รอดำเนินการ"
+  },
+  {
+    "id": 31,
+    "title": "LAO APPAREL CO.,LTD",
+    "segment": "ໂຮງງານ",
+    "stage": "1. Target Lead",
+    "status": "รอดำเนินการ"
+  },
+  {
+    "id": 32,
+    "title": "PSI DRILLING (LAO) CO.,LTD",
+    "segment": "ໂຮງງານ",
+    "stage": "1. Target Lead",
+    "status": "รอดำเนินการ"
+  },
+  {
+    "id": 33,
+    "title": "DAEHAN.KOLAO FACTORY",
+    "segment": "ໂຮງງານ",
+    "stage": "1. Target Lead",
+    "status": "รอดำเนินการ"
+  },
+  {
+    "id": 34,
+    "title": "LANE XANG TOYS CLOTHES SOLE CO.,LTD",
+    "segment": "ໂຮງງານ",
+    "stage": "1. Target Lead",
+    "status": "รอดำเนินการ"
+  },
+  {
+    "id": 35,
+    "title": "KITANI ELECTRIC LAO CO., LTD",
+    "segment": "ໂຮງງານ",
+    "stage": "1. Target Lead",
+    "status": "รอดำเนินการ"
+  },
+  {
+    "id": 36,
+    "title": "HEC ENGINEERING CO., LTD",
+    "segment": "ໂຮງງານ",
+    "stage": "1. Target Lead",
+    "status": "รอดำเนินการ"
+  },
+  {
+    "id": 37,
+    "title": "THEUN-HINBOUN POWER CO., LTD",
+    "segment": "ໂຮງງານ",
+    "stage": "1. Target Lead",
+    "status": "รอดำเนินการ"
+  },
+  {
+    "id": 38,
+    "title": "MMC ELECTRONICS LAO CO.,LTD",
+    "segment": "ໂຮງງານ",
+    "stage": "1. Target Lead",
+    "status": "รอดำเนินการ"
+  },
+  {
+    "id": 39,
+    "title": "MASCOT INTERNATIONAL (LAO) SOLE CO., LTD",
+    "segment": "ໂຮງງານ",
+    "stage": "1. Target Lead",
+    "status": "รอดำเนินการ"
+  },
+  {
+    "id": 40,
+    "title": "SHINDENGEN CO.,LTD",
+    "segment": "ໂຮງງານ",
+    "stage": "1. Target Lead",
+    "status": "รอดำเนินการ"
+  },
+  {
+    "id": 41,
+    "title": "CINEPLEX (LAO) SOLE CO., LTD",
+    "segment": "ໂຮງແຮມ",
+    "stage": "1. Target Lead",
+    "status": "รอดำเนินการ"
+  },
+  {
+    "id": 42,
+    "title": "ETL Company Limited",
+    "segment": "ເອກະຊົນ",
+    "stage": "1. Target Lead",
+    "status": "รอดำเนินการ"
+  },
+  {
+    "id": 43,
+    "title": "Maliny Construction Company",
+    "segment": "ເອກະຊົນ",
+    "stage": "1. Target Lead",
+    "status": "รอดำเนินการ"
+  },
+  {
+    "id": 44,
+    "title": "Dao coffee",
+    "segment": "ເອກະຊົນ",
+    "stage": "1. Target Lead",
+    "status": "รอดำเนินการ"
+  },
+  {
+    "id": 45,
+    "title": "Savanpark",
+    "segment": "ເອກະຊົນ",
+    "stage": "1. Target Lead",
+    "status": "รอดำเนินการ"
+  },
+  {
+    "id": 46,
+    "title": "PEPSI-COLA INTERNATIONAL CORK",
+    "segment": "ເອກະຊົນ",
+    "stage": "1. Target Lead",
+    "status": "รอดำเนินการ"
+  },
+  {
+    "id": 47,
+    "title": "VITA PARK HOIYLOD",
+    "segment": "ເອກະຊົນ",
+    "stage": "1. Target Lead",
+    "status": "รอดำเนินการ"
+  },
+  {
+    "id": 48,
+    "title": "Mini big C",
+    "segment": "ເອກະຊົນ",
+    "stage": "1. Target Lead",
+    "status": "รอดำเนินการ"
+  },
+  {
+    "id": 49,
+    "title": "PORNSAKAO SHIPPING TRANSPORT SOLE CO.,LTD",
+    "segment": "ເອກະຊົນ",
+    "stage": "1. Target Lead",
+    "status": "รอดำเนินการ"
+  },
+  {
+    "id": 50,
+    "title": "SELI OVERSEAS S.P.A LAOS",
+    "segment": "ເອກະຊົນ",
+    "stage": "1. Target Lead",
+    "status": "รอดำเนินการ"
+  },
+  {
+    "id": 51,
+    "title": "TOMINAGA CO.,LTD",
+    "segment": "ເອກະຊົນ",
+    "stage": "1. Target Lead",
+    "status": "รอดำเนินการ"
+  },
+  {
+    "id": 52,
+    "title": "VONGLADDA HANDICRAFT",
+    "segment": "ເອກະຊົນ",
+    "stage": "1. Target Lead",
+    "status": "รอดำเนินการ"
+  },
+  {
+    "id": 53,
+    "title": "A E C LOGISTIC CO.,LTD",
+    "segment": "ເອກະຊົນ",
+    "stage": "1. Target Lead",
+    "status": "รอดำเนินการ"
+  },
+  {
+    "id": 54,
+    "title": "SKY TELECOM STATE COMPANY",
+    "segment": "ເອກະຊົນ",
+    "stage": "1. Target Lead",
+    "status": "รอดำเนินการ"
+  },
+  {
+    "id": 55,
+    "title": "MRS.KHAMKIENG BUSINESS ONLINE",
+    "segment": "ເອກະຊົນ",
+    "stage": "1. Target Lead",
+    "status": "รอดำเนินการ"
+  },
+  {
+    "id": 56,
+    "title": "VITAFORT LAO SOLE CO., LTD",
+    "segment": "ເອກະຊົນ",
+    "stage": "1. Target Lead",
+    "status": "รอดำเนินการ"
+  },
+  {
+    "id": 57,
+    "title": "BPS TRADING CO.,LTD",
+    "segment": "ເອກະຊົນ",
+    "stage": "1. Target Lead",
+    "status": "รอดำเนินการ"
+  },
+  {
+    "id": 58,
+    "title": "SOKXAYCHALEUN LOTTERY AGENCY SOLE CO.,LTD",
+    "segment": "ເອກະຊົນ",
+    "stage": "1. Target Lead",
+    "status": "รอดำเนินการ"
+  },
+  {
+    "id": 59,
+    "title": "M LAO IMPORT-EXPORT CO., LTD",
+    "segment": "ເອກະຊົນ",
+    "stage": "1. Target Lead",
+    "status": "รอดำเนินการ"
+  },
+  {
+    "id": 60,
+    "title": "PHU GIA STEEL INDUSTRY SOLE CO.,LTD",
+    "segment": "ເອກະຊົນ",
+    "stage": "1. Target Lead",
+    "status": "รอดำเนินการ"
+  },
+  {
+    "id": 61,
+    "title": "LUANG PASEUTH CONSTRUCTION SOLE CO.,LTD",
+    "segment": "ເອກະຊົນ",
+    "stage": "1. Target Lead",
+    "status": "รอดำเนินการ"
+  },
+  {
+    "id": 62,
+    "title": "KAYASIT TRADING CO.,LTD",
+    "segment": "ເອກະຊົນ",
+    "stage": "1. Target Lead",
+    "status": "รอดำเนินการ"
+  },
+  {
+    "id": 63,
+    "title": "SISIKU LAO CO.,LTD",
+    "segment": "ເອກະຊົນ",
+    "stage": "1. Target Lead",
+    "status": "รอดำเนินการ"
+  },
+  {
+    "id": 64,
+    "title": "MONDO YAGI LAO CO.,LTD",
+    "segment": "ເອກະຊົນ",
+    "stage": "1. Target Lead",
+    "status": "รอดำเนินการ"
+  },
+  {
+    "id": 65,
+    "title": "EXAMS IMPORT-EXPORT SOLE CO.,LTD",
+    "segment": "ເອກະຊົນ",
+    "stage": "1. Target Lead",
+    "status": "รอดำเนินการ"
+  },
+  {
+    "id": 66,
+    "title": "PHAILAVANH KOUAVONG",
+    "segment": "ເອກະຊົນ",
+    "stage": "1. Target Lead",
+    "status": "รอดำเนินการ"
+  },
+  {
+    "id": 67,
+    "title": "CJ KOREA EXPRESS LAOS REPRESENTATIVE OFFICE",
+    "segment": "ເອກະຊົນ",
+    "stage": "1. Target Lead",
+    "status": "รอดำเนินการ"
+  },
+  {
+    "id": 68,
+    "title": "SBL COMPANY LTD",
+    "segment": "ເອກະຊົນ",
+    "stage": "1. Target Lead",
+    "status": "รอดำเนินการ"
+  },
+  {
+    "id": 69,
+    "title": "TTC LAO SERVICE SOLE CO., LTD",
+    "segment": "ເອກະຊົນ",
+    "stage": "1. Target Lead",
+    "status": "รอดำเนินการ"
+  },
+  {
+    "id": 70,
+    "title": "SAVAN LOGISTICS CO., LTD",
+    "segment": "ເອກະຊົນ",
+    "stage": "1. Target Lead",
+    "status": "รอดำเนินการ"
+  },
+  {
+    "id": 71,
+    "title": "O.M. (LAOS) CO., LTD",
+    "segment": "ເອກະຊົນ",
+    "stage": "1. Target Lead",
+    "status": "รอดำเนินการ"
+  },
+  {
+    "id": 72,
+    "title": "LAO AGRO ORGANIC INDUSTRIES LTD",
+    "segment": "ເອກະຊົນ",
+    "stage": "1. Target Lead",
+    "status": "รอดำเนินการ"
+  },
+  {
+    "id": 73,
+    "title": "LAO FIBER OPTIC COMMUNICATION NETWORK SOLE CO",
+    "segment": "ເອກະຊົນ",
+    "stage": "1. Target Lead",
+    "status": "รอดำเนินการ"
+  },
+  {
+    "id": 74,
+    "title": "NONHAI SERVICES POINT",
+    "segment": "ເອກະຊົນ",
+    "stage": "1. Target Lead",
+    "status": "รอดำเนินการ"
+  },
+  {
+    "id": 75,
+    "title": "DAI-ICHI DENSHI LAO CO.,LTD",
+    "segment": "ເອກະຊົນ",
+    "stage": "1. Target Lead",
+    "status": "รอดำเนินการ"
+  },
+  {
+    "id": 76,
+    "title": "THIPPHACHAN INSTALLATION ELECTRIC CO., LTD",
+    "segment": "ເອກະຊົນ",
+    "stage": "1. Target Lead",
+    "status": "รอดำเนินการ"
+  },
+  {
+    "id": 77,
+    "title": "ACE INTERNATIONAL LAO TRADING SOLE .,LTD",
+    "segment": "ເອກະຊົນ",
+    "stage": "1. Target Lead",
+    "status": "รอดำเนินการ"
+  },
+  {
+    "id": 78,
+    "title": "SOUVANNY TRACTOR",
+    "segment": "ເອກະຊົນ",
+    "stage": "1. Target Lead",
+    "status": "รอดำเนินการ"
+  },
+  {
+    "id": 79,
+    "title": "PETROL VIETNAM OIL LAO CO.,LTD",
+    "segment": "ເອກະຊົນ",
+    "stage": "1. Target Lead",
+    "status": "รอดำเนินการ"
+  },
+  {
+    "id": 80,
+    "title": "SEVEN DIGITAL",
+    "segment": "ເອກະຊົນ",
+    "stage": "1. Target Lead",
+    "status": "รอดำเนินการ"
+  },
+  {
+    "id": 81,
+    "title": "A.C.E CONSULTANCY CO.,LTD",
+    "segment": "ເອກະຊົນ",
+    "stage": "1. Target Lead",
+    "status": "รอดำเนินการ"
+  },
+  {
+    "id": 82,
+    "title": "MDP TRADING EXPORT-IMPORT SOLE CO.,LTD",
+    "segment": "ເອກະຊົນ",
+    "stage": "1. Target Lead",
+    "status": "รอดำเนินการ"
+  },
+  {
+    "id": 83,
+    "title": "INSYTHONG MORTOR IMPORT-EXPORT CO.,LTD",
+    "segment": "ເອກະຊົນ",
+    "stage": "1. Target Lead",
+    "status": "รอดำเนินการ"
+  },
+  {
+    "id": 84,
+    "title": "LAO HOME MART IMPORT-EXPORT CO.,LTD",
+    "segment": "ເອກະຊົນ",
+    "stage": "1. Target Lead",
+    "status": "รอดำเนินการ"
+  },
+  {
+    "id": 85,
+    "title": "LAO MUNKONG SOLE CO.,LTD",
+    "segment": "ເອກະຊົນ",
+    "stage": "1. Target Lead",
+    "status": "รอดำเนินการ"
+  },
+  {
+    "id": 86,
+    "title": "OTI ASIA CO.,LTD SOLE COMPANY LIMITED",
+    "segment": "ເອກະຊົນ",
+    "stage": "1. Target Lead",
+    "status": "รอดำเนินการ"
+  },
+  {
+    "id": 87,
+    "title": "PK LAB PROCESS AND SERVICE SOLE CO.,LTD",
+    "segment": "ເອກະຊົນ",
+    "stage": "1. Target Lead",
+    "status": "รอดำเนินการ"
+  },
+  {
+    "id": 88,
+    "title": "SANTIE LAO II CO.,LTD",
+    "segment": "ເອກະຊົນ",
+    "stage": "1. Target Lead",
+    "status": "รอดำเนินการ"
+  },
+  {
+    "id": 89,
+    "title": "MS PHONETHIP(CASH ON DELIVER)",
+    "segment": "ເອກະຊົນ",
+    "stage": "1. Target Lead",
+    "status": "รอดำเนินการ"
+  },
+  {
+    "id": 90,
+    "title": "SANTICS LAO CO.,LTD",
+    "segment": "ເອກະຊົນ",
+    "stage": "1. Target Lead",
+    "status": "รอดำเนินการ"
+  },
+  {
+    "id": 91,
+    "title": "ESSILOR LAO COMPANY LIMITED",
+    "segment": "ເອກະຊົນ",
+    "stage": "1. Target Lead",
+    "status": "รอดำเนินการ"
+  },
+  {
+    "id": 92,
+    "title": "ISUZU LAO VSA CO.,LTD",
+    "segment": "ເອກະຊົນ",
+    "stage": "1. Target Lead",
+    "status": "รอดำเนินการ"
+  },
+  {
+    "id": 93,
+    "title": "SAHAMIT PHATTHANA COMPANY LIMITED",
+    "segment": "ເອກະຊົນ",
+    "stage": "1. Target Lead",
+    "status": "รอดำเนินการ"
+  },
+  {
+    "id": 94,
+    "title": "GDCI SOLE CO.,LTD",
+    "segment": "ເອກະຊົນ",
+    "stage": "1. Target Lead",
+    "status": "รอดำเนินการ"
+  },
+  {
+    "id": 95,
+    "title": "LAO MOBILE GROUP",
+    "segment": "ເອກະຊົນ",
+    "stage": "1. Target Lead",
+    "status": "รอดำเนินการ"
+  },
+  {
+    "id": 96,
+    "title": "S&S CHALEURN SOLE CO.,LTD",
+    "segment": "ເອກະຊົນ",
+    "stage": "1. Target Lead",
+    "status": "รอดำเนินการ"
+  },
+  {
+    "id": 97,
+    "title": "SOKDY OSOTH IMPORT-EXPORT CO.,LTD",
+    "segment": "ເອກະຊົນ",
+    "stage": "1. Target Lead",
+    "status": "รอดำเนินการ"
+  },
+  {
+    "id": 98,
+    "title": "EXPRESS FOOD GROUP LAO CO.,LTD",
+    "segment": "ເອກະຊົນ",
+    "stage": "1. Target Lead",
+    "status": "รอดำเนินการ"
+  },
+  {
+    "id": 99,
+    "title": "ANIMAL DOCTORS INTERNATIONAL SOLE CO.,LTD",
+    "segment": "ເອກະຊົນ",
+    "stage": "1. Target Lead",
+    "status": "รอดำเนินการ"
+  },
+  {
+    "id": 100,
+    "title": "COMIN ASIA",
+    "segment": "ເອກະຊົນ",
+    "stage": "1. Target Lead",
+    "status": "รอดำเนินการ"
+  },
+  {
+    "id": 101,
+    "title": "THAI SAMSUNG ELECTRONICS CO.,LTD",
+    "segment": "ເອກະຊົນ",
+    "stage": "1. Target Lead",
+    "status": "รอดำเนินการ"
+  },
+  {
+    "id": 102,
+    "title": "SCHNEIDER THAILAND",
+    "segment": "ເອກະຊົນ",
+    "stage": "1. Target Lead",
+    "status": "รอดำเนินการ"
+  },
+  {
+    "id": 103,
+    "title": "LT PLASTIC COMPANY LIMITED",
+    "segment": "ເອກະຊົນ",
+    "stage": "1. Target Lead",
+    "status": "รอดำเนินการ"
+  },
+  {
+    "id": 104,
+    "title": "MS. SYMANY SERVICE",
+    "segment": "ເອກະຊົນ",
+    "stage": "1. Target Lead",
+    "status": "รอดำเนินการ"
+  },
+  {
+    "id": 105,
+    "title": "VILAI MOTORS COMPANY",
+    "segment": "ເອກະຊົນ",
+    "stage": "1. Target Lead",
+    "status": "รอดำเนินการ"
+  },
+  {
+    "id": 106,
+    "title": "K.P COMPANY LIMITED",
+    "segment": "ເອກະຊົນ",
+    "stage": "1. Target Lead",
+    "status": "รอดำเนินการ"
+  },
+  {
+    "id": 107,
+    "title": "GROWTH LINK (LAO) CO.,LTD",
+    "segment": "ເອກະຊົນ",
+    "stage": "1. Target Lead",
+    "status": "รอดำเนินการ"
+  },
+  {
+    "id": 108,
+    "title": "BIGSKY ADVERTISING CO.,LTD",
+    "segment": "ເອກະຊົນ",
+    "stage": "1. Target Lead",
+    "status": "รอดำเนินการ"
+  },
+  {
+    "id": 109,
+    "title": "SOLUXIMA (LAO) SOLE CO.,LTD",
+    "segment": "ເອກະຊົນ",
+    "stage": "1. Target Lead",
+    "status": "รอดำเนินการ"
+  },
+  {
+    "id": 110,
+    "title": "AISHIN LAO CO.,LTD",
+    "segment": "ເອກະຊົນ",
+    "stage": "1. Target Lead",
+    "status": "รอดำเนินการ"
+  },
+  {
+    "id": 111,
+    "title": "MR. SINHPHEANG",
+    "segment": "ເອກະຊົນ",
+    "stage": "1. Target Lead",
+    "status": "รอดำเนินการ"
+  },
+  {
+    "id": 112,
+    "title": "MINTHONG SUPPLY PARTS",
+    "segment": "ເອກະຊົນ",
+    "stage": "1. Target Lead",
+    "status": "รอดำเนินการ"
+  },
+  {
+    "id": 113,
+    "title": "KP BEAU LAO CO.,LTD",
+    "segment": "ເອກະຊົນ",
+    "stage": "1. Target Lead",
+    "status": "รอดำเนินการ"
+  },
+  {
+    "id": 114,
+    "title": "AUTO LAO PRESTIGE CO.,LTD",
+    "segment": "ເອກະຊົນ",
+    "stage": "1. Target Lead",
+    "status": "รอดำเนินการ"
+  },
+  {
+    "id": 115,
+    "title": "LAO YONGCHAREON TRADING IMP-EXP CO.,LTD",
+    "segment": "ເອກະຊົນ",
+    "stage": "1. Target Lead",
+    "status": "รอดำเนินการ"
+  },
+  {
+    "id": 116,
+    "title": "MS. VILAYLUCK BANNAVONG",
+    "segment": "ເອກະຊົນ",
+    "stage": "1. Target Lead",
+    "status": "รอดำเนินการ"
+  },
+  {
+    "id": 117,
+    "title": "VIENTIANE MEDICAL CLINIC",
+    "segment": "ເອກະຊົນ",
+    "stage": "1. Target Lead",
+    "status": "รอดำเนินการ"
+  },
+  {
+    "id": 118,
+    "title": "CHAMPA INTERNET",
+    "segment": "ເອກະຊົນ",
+    "stage": "1. Target Lead",
+    "status": "รอดำเนินการ"
+  },
+  {
+    "id": 119,
+    "title": "TANCHONG MOTOR LAO SOLE CO,.LTD",
+    "segment": "ເອກະຊົນ",
+    "stage": "1. Target Lead",
+    "status": "รอดำเนินการ"
+  },
+  {
+    "id": 120,
+    "title": "ADERANCS LAO CO.,LTD",
+    "segment": "ເອກະຊົນ",
+    "stage": "1. Target Lead",
+    "status": "รอดำเนินการ"
+  },
+  {
+    "id": 121,
+    "title": "HELVETAS LAOS",
+    "segment": "NGO",
+    "stage": "1. Target Lead",
+    "status": "รอดำเนินการ"
+  },
+  {
+    "id": 122,
+    "title": "MAG LAO",
+    "segment": "NGO",
+    "stage": "1. Target Lead",
+    "status": "รอดำเนินการ"
+  },
+  {
+    "id": 123,
+    "title": "JICS LAOS OFFICE",
+    "segment": "NGO",
+    "stage": "1. Target Lead",
+    "status": "รอดำเนินการ"
+  },
+  {
+    "id": 124,
+    "title": "Norwegian",
+    "segment": "NGO",
+    "stage": "1. Target Lead",
+    "status": "รอดำเนินการ"
+  },
+  {
+    "id": 125,
+    "title": "AAPTIP",
+    "segment": "NGO",
+    "stage": "1. Target Lead",
+    "status": "รอดำเนินการ"
+  },
+  {
+    "id": 126,
+    "title": "LAO INSTITUTE FOR RENEWABLE ENERGY (LIRE)",
+    "segment": "NGO",
+    "stage": "1. Target Lead",
+    "status": "รอดำเนินการ"
+  },
+  {
+    "id": 127,
+    "title": "FDQC CENTER",
+    "segment": "NGO",
+    "stage": "1. Target Lead",
+    "status": "รอดำเนินการ"
+  },
+  {
+    "id": 128,
+    "title": "V.I.S Vientiane International School",
+    "segment": "ໂຮງຮຽນ",
+    "stage": "1. Target Lead",
+    "status": "รอดำเนินการ"
+  },
+  {
+    "id": 129,
+    "title": "MINISTRY OF PUBLIC WORK AND TRANSPORT",
+    "segment": "ໂຄງການລັດ",
+    "stage": "1. Target Lead",
+    "status": "รอดำเนินการ"
+  },
+  {
+    "id": 130,
+    "title": "MINISTRY OF POST AND TELECOMMUNICATION",
+    "segment": "ໂຄງການລັດ",
+    "stage": "1. Target Lead",
+    "status": "รอดำเนินการ"
+  },
+  {
+    "id": 131,
+    "title": "MINISTRY OF PLANNING & INVESTMENT",
+    "segment": "ໂຄງການລັດ",
+    "stage": "1. Target Lead",
+    "status": "รอดำเนินการ"
+  },
+  {
+    "id": 132,
+    "title": "MINISTRY OF EDUCATION(PRIMARY EDUCATION DIV.)",
+    "segment": "ໂຄງການລັດ",
+    "stage": "1. Target Lead",
+    "status": "รอดำเนินการ"
+  },
+  {
+    "id": 133,
+    "title": "MINISTRY OF INFORMATION CULTURE AND TOURIM",
+    "segment": "ໂຄງການລັດ",
+    "stage": "1. Target Lead",
+    "status": "รอดำเนินการ"
+  },
+  {
+    "id": 134,
+    "title": "MINISTRY OF INDUSTRY AND COMMERCE",
+    "segment": "ໂຄງການລັດ",
+    "stage": "1. Target Lead",
+    "status": "รอดำเนินการ"
+  },
+  {
+    "id": 135,
+    "title": "MINISTRY OF HEALTH",
+    "segment": "ໂຄງການລັດ",
+    "stage": "1. Target Lead",
+    "status": "รอดำเนินการ"
+  },
+  {
+    "id": 136,
+    "title": "MINISTRY OF NATURAL RESOURCES AND ENVIRONMENT",
+    "segment": "ໂຄງການລັດ",
+    "stage": "1. Target Lead",
+    "status": "รอดำเนินการ"
+  },
+  {
+    "id": 137,
+    "title": "MINISTRY OF ENERGY AND MINE",
+    "segment": "ໂຄງການລັດ",
+    "stage": "1. Target Lead",
+    "status": "รอดำเนินการ"
+  },
+  {
+    "id": 138,
+    "title": "MINISTRY OF AGRICULTURE AND FORESTRY",
+    "segment": "ໂຄງການລັດ",
+    "stage": "1. Target Lead",
     "status": "รอดำเนินการ"
   }
 ]
