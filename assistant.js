@@ -8,7 +8,22 @@
   const apiUrl = (window.CHECKCOM_API_URL || '').replace(/\/$/, '');
   const localSync = location.hostname === '127.0.0.1' && location.port === '8765';
   const publicSync = location.hostname.endsWith('.github.io');
+  const botUrl = 'https://t.me/CheckcomMoneyBot';
   const say = message => { $('voice-result').textContent = message; if (voiceReply && 'speechSynthesis' in window) { speechSynthesis.cancel(); const utterance = new SpeechSynthesisUtterance(message); utterance.lang = $('speech-language').value; speechSynthesis.speak(utterance); voiceReply = false; } };
+  function sendToBot(command) {
+    say('คำสั่งนี้ต้องยืนยันกับบอต Telegram เพื่อบันทึกขึ้นเว็บ');
+    const copy = document.createElement('button');
+    copy.type = 'button'; copy.textContent = 'คัดลอกคำสั่ง';
+    copy.onclick = async () => {
+      try { await navigator.clipboard.writeText(command); copy.textContent = 'คัดลอกแล้ว'; }
+      catch { $('command').focus(); $('command').select(); copy.textContent = 'เลือกข้อความแล้ว กดคัดลอก'; }
+    };
+    const link = document.createElement('a');
+    link.href = botUrl; link.target = '_blank'; link.rel = 'noopener noreferrer';
+    link.textContent = 'เปิดบอต Telegram';
+    link.style.marginLeft = '10px';
+    $('voice-result').append(' ', copy, ' ', link);
+  }
   const save = () => localStorage.setItem(key, JSON.stringify(tasks));
   async function refreshLocal() { if (localSync) { const response = await fetch('/api/tasks'); tasks = (await response.json()).tasks; } else if (publicSync) { const response = await fetch('data/tasks.json?now=' + Date.now(), { cache: 'no-store' }); if (response.ok) tasks = await response.json(); } }
   async function changeLocal(payload) { if (localSync) { const response = await fetch('/api/tasks', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(payload) }); if (!response.ok) throw new Error('บันทึกงานไม่สำเร็จ'); tasks = (await response.json()).tasks; } else save(); }
@@ -46,7 +61,7 @@
     try { await refreshLocal(); } catch { return say('โหลดงานในเครื่องไม่สำเร็จ'); }
     const command = raw.trim();
     if (!command) return say('กรุณาพูดหรือพิมพ์คำสั่ง');
-    if (publicSync && /(?:เพิ่มงาน|สร้างงาน|จดงาน|ปิดงาน|เปลี่ยนสถานะ|อัปเดตงาน)/i.test(command)) return say('เว็บสาธารณะอ่านงานได้อย่างเดียว กรุณาสั่งเพิ่มหรือแก้งานผ่านบอต Telegram');
+    if (publicSync && /(?:เพิ่มงาน|สร้างงาน|จดงาน|ปิดงาน|เปลี่ยนสถานะ|อัปเดตงาน|ช่วยจด|ເພີ່ມວຽກ)/i.test(command)) return sendToBot(command);
     say(`ได้ยิน: ${command}`);
     const add = command.match(/^(?:เพิ่มงาน|สร้างงาน|จดงาน|ເພີ່ມວຽກ)\s+(.+)$/i);
     if (add) return confirm(`เพิ่มงาน “${add[1]}” ใช่ไหม`, async () => { const id = Math.max(0, ...tasks.map(t => t.id)) + 1; if (!localSync) tasks.push({ id, title: add[1], status: 'รอดำเนินการ' }); await changeLocal({ action: 'add', title: add[1] }); render(); say(`เพิ่มงานเลข ${id} แล้ว`); });
@@ -58,11 +73,13 @@
     if (/(?:เวิร์กโฟลว์|workflow|ວຽກ)/i.test(command)) { document.querySelector('[data-page="workflow"]').click(); return say('เปิด Workflow แล้ว'); }
     if (/(?:แดชบอร์ด|dashboard|ยอดขาย|ทีมขาย)/i.test(command)) { document.querySelector('[data-page="sales"]').click(); return say('เปิด Dashboard ทีมขายแล้ว'); }
     if (/(?:เอกสาร|document)/i.test(command)) { document.querySelector('[data-page="documents"]').click(); return say('เปิดส่วนเอกสารแล้ว'); }
+    if (publicSync) return sendToBot(command);
     say('ยังไม่เข้าใจคำสั่ง ลอง “เพิ่มงาน …”, “ค้นงาน …”, “ปิดงาน 1”, “สรุปงาน” หรือ “เปิดแดชบอร์ด”');
   }
   const dispatch = command => apiUrl ? runAi(command) : run(command);
+  if (!apiUrl) $('access-code').hidden = true;
   $('command-form').onsubmit = event => { event.preventDefault(); dispatch($('command').value); };
-  if (!apiUrl) say(publicSync ? 'เว็บนี้แสดงงานจากบอต Telegram แบบอ่านอย่างเดียว กดสรุปงานหรือค้นงานได้' : localSync ? 'ใช้คำสั่งพื้นฐาน ข้อมูลงานซิงก์กับบอต Telegram บนเครื่องนี้' : 'AI สนทนายังไม่เชื่อมต่อ ตอนนี้ใช้คำสั่งพื้นฐาน ข้อมูลงานเก็บเฉพาะเบราว์เซอร์นี้');
+  if (!apiUrl) say(publicSync ? 'ค้นหาและสรุปงานได้ที่นี่ คำสั่งเพิ่มหรือแก้งานจะส่งต่อไปยังบอต Telegram' : localSync ? 'ใช้คำสั่งพื้นฐาน ข้อมูลงานซิงก์กับบอต Telegram บนเครื่องนี้' : 'AI สนทนายังไม่เชื่อมต่อ ตอนนี้ใช้คำสั่งพื้นฐาน ข้อมูลงานเก็บเฉพาะเบราว์เซอร์นี้');
   if (localSync || publicSync) refreshLocal().then(() => render()).catch(() => {});
   if (publicSync) setInterval(() => refreshLocal().then(() => render()).catch(() => {}), 30000);
   else { $('access-code').value = sessionStorage.getItem('checkcom-access-code') || ''; $('access-code').addEventListener('change', () => sessionStorage.setItem('checkcom-access-code', $('access-code').value)); }
