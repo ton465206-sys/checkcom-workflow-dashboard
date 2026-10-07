@@ -28,13 +28,13 @@
     <div class="confirm" id="confirm" hidden><span id="confirm-text"></span> <button type="button" id="confirm-yes">ยืนยัน</button><button type="button" id="confirm-no">ยกเลิก</button></div>
     <section class="tasks" id="tasks" hidden><h2>เป้าหมาย Q4 จากแผนติดตาม</h2><input id="task-filter" type="search" aria-label="ค้นชื่อองค์กรหรือกลุ่ม" placeholder="ค้นชื่อองค์กรหรือกลุ่ม"><p id="task-count"></p><ul id="task-list"></ul></section>
     <iframe class="frame" id="workflow" title="Workflow แผนก" src="apps/workflow/index.html"></iframe>
-    <iframe class="frame" id="sales" title="Dashboard ทีมขาย" src="apps/sales/index.html" hidden></iframe>
+    <iframe class="frame" id="sales" title="ติดตามเป้าหมายฝ่ายขาย Q4" src="apps/q4/index.html" hidden></iframe>
     <iframe class="frame" id="documents" title="จัดการเอกสาร" src="apps/documents/index.html" hidden></iframe>
   </main>
   <script>
     const pages={
       workflow:{description:'ภาพรวมขั้นตอนงานและ KPI รายแผนก'},
-      sales:{description:'งานมอบหมาย ลูกค้า และ KPI ของทีมขาย Mungmee IT'},
+      sales:{description:'เป้าหมาย Q4 รายองค์กร กลุ่มธุรกิจ และขั้นตอนปัจจุบัน'},
       documents:{description:'จัดการเอกสารจากโฟลเดอร์ที่ผู้ใช้เลือก'}
     };
     const description=document.getElementById('description');

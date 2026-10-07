@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Q4 Sales Pipeline | Mangmee IT Solutions</title>
+  <style>
+    *{box-sizing:border-box}body{margin:0;background:#f4f7fa;color:#18313d;font-family:Segoe UI,"Noto Sans Lao",sans-serif}main{max-width:1450px;margin:auto;padding:24px}h1{margin:0;font-size:clamp(1.4rem,3vw,2.2rem)}p{margin:7px 0 0;color:#58717c}.top{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:center}.badge{background:#dff3ed;color:#11634d;border-radius:99px;padding:8px 12px;font-size:.9rem}.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;margin:22px 0}.card,.panel{background:white;border:1px solid #dbe6eb;border-radius:14px;padding:18px;box-shadow:0 3px 12px #17313d08}.card strong{display:block;font-size:2rem;color:#145b67;margin-top:7px}.card span{color:#58717c}.panel{margin-bottom:18px}h2{margin:0 0 12px;font-size:1.1rem}.groups{display:flex;flex-wrap:wrap;gap:8px}.groups button{border:1px solid #bcd3d8;background:white;color:#23505a;padding:8px 12px;border-radius:99px;cursor:pointer;font:inherit}.groups button[aria-pressed=true]{background:#146775;color:white}.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px}input{width:min(100%,400px);padding:10px 12px;border:1px solid #bcd3d8;border-radius:9px;font:inherit}.table-wrap{overflow-x:auto}table{border-collapse:collapse;width:100%;min-width:1100px}th,td{text-align:left;vertical-align:top;padding:12px;border-bottom:1px solid #e5edf0}th{color:#58717c;font-weight:600}td:first-child{font-weight:600;color:#146775}tr:hover td{background:#f8fbfc}.stage{display:inline-block;background:#e8f5f0;color:#17604b;padding:5px 9px;border-radius:8px;font-size:.9rem}.muted{color:#8296a0}.contact{font-size:.88rem;overflow-wrap:anywhere}.empty{padding:20px;color:#58717c}button:focus-visible,input:focus-visible{outline:3px solid #e3a831;outline-offset:2px}
+  </style>
+</head>
+<body>
+<main>
+  <div class="top"><div><h1>ติดตามเป้าหมายฝ่ายขาย Q4</h1><p>Mangmee IT Solutions · ข้อมูลจากแผน Q4 และอัปเดตขั้นตอนผ่าน Telegram</p></div><span class="badge" id="updated">กำลังโหลดข้อมูล</span></div>
+  <section class="cards" aria-label="ภาพรวม"><div class="card"><span>องค์กรเป้าหมาย</span><strong id="total">—</strong></div><div class="card"><span>กลุ่มธุรกิจที่มีรายการ</span><strong id="segments">—</strong></div><div class="card"><span>มีความคืบหน้า</span><strong id="progress">—</strong></div><div class="card"><span>ต้องติดตามวันนี้หรือค้าง</span><strong id="due">—</strong></div><div class="card"><span>ยังไม่กำหนดวันติดตาม</span><strong id="undated">—</strong></div></section>
+  <section class="panel"><h2>กลุ่มธุรกิจ</h2><div class="groups" id="groups"></div></section>
+  <section class="panel"><h2>รายชื่อ ขั้นตอน และข้อมูลติดตามลูกค้า</h2><div class="toolbar"><input id="search" type="search" aria-label="ค้นชื่อองค์กร" placeholder="ค้นชื่อองค์กรหรือผู้ติดต่อ"><span id="count" aria-live="polite"></span></div><div class="table-wrap"><table><thead><tr><th>เลข</th><th>องค์กร / กลุ่ม</th><th>ขั้นตอน</th><th>ผู้ติดต่อ</th><th>ช่องทางติดต่อ</th><th>วันติดตาม</th><th>บันทึกติดตาม</th></tr></thead><tbody id="rows"></tbody></table></div><p class="empty" id="empty" hidden>ไม่พบรายการ</p></section>
+</main>
+<script>
+  let records=[], group='';
+  const $=id=>document.getElementById(id);
+  function render(){
+    const groups=Object.groupBy(records,item=>item.segment||'อื่น ๆ');
+    $('total').textContent=records.length;
+    $('segments').textContent=Object.keys(groups).length;
+    $('progress').textContent=records.filter(item=>item.stage!=='1. Target Lead').length;
+    const today=new Date(Date.now()+7*3600000).toISOString().slice(0,10);
+    $('due').textContent=records.filter(item=>item.follow_up_date&&item.follow_up_date<=today).length;
+    $('undated').textContent=records.filter(item=>!item.follow_up_date).length;
+    $('groups').replaceChildren();
+    for(const [name,items] of [['ทั้งหมด',records],...Object.entries(groups)]){
+      const button=document.createElement('button');button.type='button';button.textContent=`${name} ${items.length}`;button.setAttribute('aria-pressed',String(group===(name==='ทั้งหมด'?'':name)));button.onclick=()=>{group=name==='ทั้งหมด'?'':name;render();};$('groups').append(button);
+    }
+    const query=$('search').value.toLocaleLowerCase().trim();
+    const found=records.filter(item=>(!group||item.segment===group)&&(!query||`${item.title} ${item.contact||''} ${item.segment||''}`.toLocaleLowerCase().includes(query)));
+    $('count').textContent=`พบ ${found.length} รายการ`;
+    $('rows').replaceChildren();$('empty').hidden=found.length>0;
+    for(const item of found){
+      const row=document.createElement('tr');
+      const values=[`#${item.id}`,`${item.title}\n${item.segment||'อื่น ๆ'}`,item.stage||'ไม่ระบุ',item.contact||'—',item.contact_info||'—',item.follow_up_date||'ยังไม่กำหนด',item.follow_up_note||item.action_plan||'ยังไม่มีบันทึก'];
+      values.forEach((value,index)=>{const cell=document.createElement('td');cell.textContent=value;cell.style.whiteSpace=index===1?'pre-line':'normal';if(index===2)cell.className='stage';if(index===4)cell.classList.add('contact');if(value==='—'||value==='ยังไม่กำหนด'||value==='ยังไม่มีบันทึก')cell.classList.add('muted');row.append(cell);});
+      $('rows').append(row);
+    }
+  }
+  async function refresh(){try{const local=location.hostname==='127.0.0.1';const response=await fetch(local?'/api/tasks':'../../data/tasks.json?now='+Date.now(),{cache:'no-store'});if(!response.ok)throw Error();const data=await response.json();records=local?data.tasks:data;if(!Array.isArray(records))throw Error();render();$('updated').textContent='ข้อมูลล่าสุดจากเว็บ';}catch{$('updated').textContent='โหลดข้อมูลไม่สำเร็จ';}}
+  $('search').addEventListener('input',render);refresh();setInterval(refresh,30000);
+</script>
+</body>
+</html>
