@@ -1,11 +1,12 @@
 (() => {
   const $ = id => document.getElementById(id);
   const key = 'checkcom-assistant-tasks-v1';
-  let tasks = JSON.parse(localStorage.getItem(key) || '[]');
+  let tasks = [];
   let pending = null;
   let voiceReply = false;
   const history = [];
   const apiUrl = (window.CHECKCOM_API_URL || '').replace(/\/$/, '');
+  if (!apiUrl) { try { tasks = JSON.parse(localStorage.getItem(key) || '[]'); } catch { tasks = []; } }
   const localSync = location.hostname === '127.0.0.1' && location.port === '8765';
   const publicSync = location.hostname.endsWith('.github.io');
   const botUrl = 'https://t.me/CheckcomMoneyBot';
@@ -27,11 +28,74 @@
   const save = () => localStorage.setItem(key, JSON.stringify(tasks));
   async function refreshLocal() { if (localSync) { const response = await fetch('/api/tasks'); tasks = (await response.json()).tasks; } else if (publicSync) { const response = await fetch('data/tasks.json?now=' + Date.now(), { cache: 'no-store' }); if (response.ok) tasks = await response.json(); } }
   async function changeLocal(payload) { if (localSync) { const response = await fetch('/api/tasks', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(payload) }); if (!response.ok) throw new Error('บันทึกงานไม่สำเร็จ'); tasks = (await response.json()).tasks; } else save(); }
-  async function callApi(path, payload) {
-    const response = await fetch(apiUrl + path, { method: 'POST', headers: { 'content-type': 'application/json', 'x-access-code': $('access-code').value }, body: JSON.stringify(payload) });
+  async function callApi(path, payload, method = 'POST') {
+    const response = await fetch(apiUrl + path, { method, headers: { 'content-type': 'application/json', 'x-access-code': $('access-code').value }, ...(method === 'GET' ? {} : { body: JSON.stringify(payload) }), cache: 'no-store' });
     const data = await response.json();
-    if (!response.ok) throw new Error(data.error || 'บริการขัดข้อง');
+    if (!response.ok) { const error = new Error(response.status === 409 ? 'ข้อมูลถูกแก้จากอีกช่องทางแล้ว โหลดข้อมูลล่าสุดและเลือกคำสั่งใหม่อีกครั้ง' : data.error || 'บริการขัดข้อง'); error.status = response.status; throw error; }
     return data;
+  }
+  async function refreshShared() {
+    const data = await callApi('/tasks', undefined, 'GET');
+    if (!Array.isArray(data.tasks)) throw new Error('ข้อมูลรายการงานจาก API ไม่ถูกต้อง');
+    tasks = data.tasks;
+    return tasks;
+  }
+  function confirmShared(message, task, expectedVersion) {
+    // Capture the approved version and preserve every existing task field.
+    const payload = { request_id: crypto.randomUUID(), task: { ...task }, ...(expectedVersion === undefined ? {} : { expected_version: expectedVersion }) };
+    confirm(message, async () => {
+      try {
+        await callApi('/tasks/write', payload);
+        try { await refreshShared(); render(); say('บันทึกในฐานข้อมูลกลางแล้ว'); }
+        catch { say('บันทึกในฐานข้อมูลกลางแล้ว แต่โหลดรายการล่าสุดไม่สำเร็จ กรุณารีเฟรช'); }
+      } catch (error) {
+        if (error.status === 409) { try { await refreshShared(); render(); } catch {} }
+        say(error.message);
+      }
+    });
+  }
+  async function runShared(raw) {
+    // A new command invalidates an older unconfirmed operation.
+    pending = null; $('confirm').hidden = true;
+    if (!$('access-code').value.trim()) return say('กรุณาใส่รหัสเข้าใช้งาน');
+    const command = raw.trim();
+    if (!command) return say('กรุณาพูดหรือพิมพ์คำสั่ง');
+    try { await refreshShared(); } catch (error) { return say(error.message); }
+    const add = command.match(/^(?:เพิ่มงาน|สร้างงาน|จดงาน|ເພີ່ມວຽກ)\s+(.+)$/i);
+    if (add) return confirmShared(`เพิ่มงาน “${add[1]}” ใช่ไหม`, { title: add[1], status: 'รอดำเนินการ' });
+    const search = command.match(/^(?:ค้นงาน|หางาน|ค้นหา|ຄົ້ນຫາ)\s+(.+)$/i);
+    if (search) { const found = tasks.filter(task => `${task.title} ${task.segment || ''}`.toLocaleLowerCase().includes(search[1].toLocaleLowerCase())); render(found); return say(`พบ ${found.length} งาน`); }
+    const update = command.match(/^(?:เปลี่ยนสถานะงาน|อัปเดตงาน|ปิดงาน)\s*(\d+)(?:\s*(?:เป็น|ให้เป็น)\s*(เสร็จแล้ว|กำลังทำ|รอดำเนินการ))?$/i);
+    const stage = command.match(/^\/(?:stage)\s+#?(\d+)\s+(.+)$/i);
+    const followup = command.match(/^\/followup\s+#?(\d+)\s+(\d{4}-\d{2}-\d{2})\s+(.+)$/i);
+    const progress = command.match(/^\/(check|uncheck|contact|uncontact|clearblocker)\s+#?(\d+)$/i);
+    const blocker = command.match(/^\/blocker\s+#?(\d+)\s+(.+)$/i);
+    if (update || stage || followup || progress || blocker) {
+      const id = Number(progress ? progress[2] : (update || stage || followup || blocker)[1]);
+      const current = tasks.find(task => task.id === id);
+      if (!current) return say('ไม่พบเลขงานนี้');
+      if (!Number.isInteger(current.version)) return say('งานนี้ไม่มีเวอร์ชันจากฐานกลาง กรุณาตรวจ API ก่อนแก้ไข');
+      const next = { ...current };
+      let label;
+      if (update) { next.status = update[2] || 'เสร็จแล้ว'; label = `เปลี่ยนงาน ${id} เป็น “${next.status}” ใช่ไหม`; }
+      if (stage) { next.stage = stage[2].trim(); label = `เปลี่ยนขั้นตอนงาน ${id} เป็น “${next.stage}” ใช่ไหม`; }
+      if (followup) {
+        const date = new Date(`${followup[2]}T00:00:00Z`);
+        if (Number.isNaN(date.getTime()) || date.toISOString().slice(0, 10) !== followup[2]) return say('วันที่ติดตามไม่ถูกต้อง');
+        next.follow_up_date = followup[2]; next.follow_up_note = followup[3].trim(); label = `นัดติดตามงาน ${id} วันที่ ${next.follow_up_date}: ${next.follow_up_note} ใช่ไหม`;
+      }
+      if (progress) {
+        const action = progress[1].toLowerCase(); const today = new Date(Date.now() + 7 * 3600000).toISOString().slice(0, 10);
+        if (action === 'clearblocker') next.blocker = '';
+        else if (action.includes('contact')) { next.contacted = action === 'contact'; next.contacted_at = next.contacted ? today : ''; if (next.contacted) { next.checked = true; next.checked_at ||= today; } }
+        else { next.checked = action === 'check'; next.checked_at = next.checked ? today : ''; }
+        label = `บันทึกผลที่คุณแจ้งสำหรับงาน ${id} ใช่ไหม (ไม่ได้ติดต่อหรือโทรแทนคุณ)`;
+      }
+      if (blocker) { next.blocker = blocker[2].trim(); label = `บันทึกจุดติดขัดงาน ${id}: ${next.blocker} ใช่ไหม`; }
+      return confirmShared(label, next, current.version);
+    }
+    if (/^(?:สรุปงาน|ดูงาน|รายการงาน|ສະຫຼຸບວຽກ)$/i.test(command)) { render(); return say(`มี ${tasks.length} งาน เสร็จแล้ว ${tasks.filter(task => task.status === 'เสร็จแล้ว').length} งาน`); }
+    return runAi(command);
   }
   async function runAi(command) {
     if (!$('access-code').value) return say('กรุณาใส่รหัสเข้าใช้งาน AI');
@@ -43,7 +107,7 @@
       if (data.tasks) render(data.tasks);
       say(data.reply);
       if (data.confirmation_token) confirm(data.reply, async () => {
-        try { const result = await callApi('/confirm', { token: data.confirmation_token }); render(result.tasks); say(result.reply); }
+        try { const result = await callApi('/confirm', { token: data.confirmation_token }); await refreshShared(); render(); say(result.reply); }
         catch (error) { say(error.message); }
       });
     } catch (error) { say(error.message); }
@@ -80,13 +144,30 @@
     if (publicSync) return sendToBot(command);
     say('ยังไม่เข้าใจคำสั่ง ลอง “เพิ่มงาน …”, “ค้นงาน …”, “ปิดงาน 1”, “สรุปงาน” หรือ “เปิดแดชบอร์ด”');
   }
-  const dispatch = command => apiUrl ? runAi(command) : run(command);
+  const dispatch = command => apiUrl ? runShared(command) : run(command);
+  const connectButton = $('connect-api');
+  if (connectButton) {
+    connectButton.hidden = !apiUrl;
+    connectButton.onclick = async () => {
+      if (!$('access-code').value.trim()) return say('ใส่รหัสเข้าใช้งานฐานกลางก่อน');
+      sessionStorage.setItem('checkcom-access-code', $('access-code').value);
+      try { await refreshShared(); render(); say('เชื่อมต่อฐานกลางแล้ว เลือกค้นงานหรือพิมพ์คำสั่งได้เลย'); }
+      catch (error) { say(error.message); }
+    };
+  }
   if (!apiUrl) $('access-code').hidden = true;
   $('command-form').onsubmit = event => { event.preventDefault(); dispatch($('command').value); };
   if (!apiUrl) say(publicSync ? 'ค้นชื่อองค์กรและดูขั้นตอนได้ที่นี่ อัปเดตขั้นตอนด้วยบอต Telegram' : localSync ? 'ใช้คำสั่งพื้นฐาน ข้อมูลงานซิงก์กับบอต Telegram บนเครื่องนี้' : 'AI สนทนายังไม่เชื่อมต่อ ตอนนี้ใช้คำสั่งพื้นฐาน ข้อมูลงานเก็บเฉพาะเบราว์เซอร์นี้');
-  if (localSync || publicSync) refreshLocal().then(() => render()).catch(() => {});
-  if (publicSync) setInterval(() => refreshLocal().then(() => render()).catch(() => {}), 30000);
-  else { $('access-code').value = sessionStorage.getItem('checkcom-access-code') || ''; $('access-code').addEventListener('change', () => sessionStorage.setItem('checkcom-access-code', $('access-code').value)); }
+  if (apiUrl) {
+    $('access-code').value = sessionStorage.getItem('checkcom-access-code') || '';
+    $('access-code').addEventListener('change', () => { pending = null; $('confirm').hidden = true; tasks = []; render(); sessionStorage.setItem('checkcom-access-code', $('access-code').value); if ($('access-code').value.trim()) refreshShared().then(() => { render(); say('เชื่อมต่อฐานข้อมูลกลางแล้ว'); }).catch(error => say(error.message)); });
+    if ($('access-code').value.trim()) refreshShared().then(() => { render(); say('เชื่อมต่อฐานข้อมูลกลางแล้ว'); }).catch(error => say(error.message));
+    else say('ใส่รหัสเข้าใช้งานเพื่ออ่านและแก้งานร่วมกับ Telegram');
+    setInterval(() => { if ($('access-code').value.trim()) refreshShared().then(() => render()).catch(error => say(error.message)); }, 30000);
+  } else {
+    if (localSync || publicSync) refreshLocal().then(() => render()).catch(() => {});
+    if (publicSync) setInterval(() => refreshLocal().then(() => render()).catch(() => {}), 30000);
+  }
   const Recognition = window.SpeechRecognition || window.webkitSpeechRecognition;
   if (!Recognition) { $('mic').disabled = true; say('เบราว์เซอร์นี้ไม่รองรับการรู้จำเสียง ใช้ช่องพิมพ์คำสั่งแทนได้'); return; }
   $('mic').onclick = () => {

@@ -1,2 +1,2 @@
-// Set to the deployed Worker URL after configuring D1 and secrets.
-window.CHECKCOM_API_URL = '';
+// Authenticated central task API. Credentials are entered privately.
+window.CHECKCOM_API_URL = 'https://checkcom-assistant-api.checkcom-ton465206.workers.dev';
