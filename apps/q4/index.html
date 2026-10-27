@@ -15,6 +15,7 @@
   <section class="panel"><h2>กลุ่มธุรกิจ</h2><div class="groups" id="groups"></div></section>
   <section class="panel"><h2>รายชื่อ ขั้นตอน และข้อมูลติดตามลูกค้า</h2><div class="toolbar"><input id="search" type="search" aria-label="ค้นชื่อองค์กร" placeholder="ค้นชื่อองค์กรหรือผู้ติดต่อ"><label><input id="pending-only" type="checkbox"> เฉพาะที่ยังไม่ติดต่อ</label><span id="count" aria-live="polite"></span></div><div class="table-wrap"><table><thead><tr><th>เลข</th><th>องค์กร / กลุ่ม</th><th>วันติดตาม</th><th>ขั้นตอน</th><th>เช็คแล้ว?</th><th>ติดต่อแล้ว?</th><th>จุดติดขัด</th><th>บันทึกติดตาม</th><th>ผู้ติดต่อ</th><th>ช่องทางติดต่อ</th></tr></thead><tbody id="rows"></tbody></table></div><p class="empty" id="empty" hidden>ไม่พบรายการ</p></section>
 </main>
+<script src="../../assistant-config.js"></script>
 <script>
   let records=[], group='';
   const $=id=>document.getElementById(id);
@@ -42,7 +43,21 @@
     }
   }
   async function refresh(){try{const local=location.hostname==='127.0.0.1';const response=await fetch(local?'/api/tasks':'../../data/tasks.json?now='+Date.now(),{cache:'no-store'});if(!response.ok)throw Error();const data=await response.json();records=local?data.tasks:data;if(!Array.isArray(records))throw Error();render();$('updated').textContent='ข้อมูลล่าสุดจากเว็บ';}catch{$('updated').textContent='โหลดข้อมูลไม่สำเร็จ';}}
-  $('search').addEventListener('input',render);$('pending-only').addEventListener('change',render);refresh();setInterval(refresh,30000);
+  $('search').addEventListener('input',render);$('pending-only').addEventListener('change',render);
+  if(window.CHECKCOM_API_URL){
+    // Use the authenticated parent's snapshot; never mix in the public export.
+    function applySnapshot(snapshot){
+      records=Array.isArray(snapshot?.tasks)?snapshot.tasks:[];render();
+      $('updated').textContent=snapshot?.state==='ready'?'ข้อมูลล่าสุดจากฐานกลาง':snapshot?.state==='error'?'เชื่อมต่อไม่ได้ ข้อมูลที่แสดงอาจเก่า':'รอเชื่อมต่อฐานกลางที่ศูนย์งาน';
+    }
+    try{
+      const host=window.parent;
+      if(host===window||host.location.origin!==location.origin)throw Error();
+      host.addEventListener('checkcom-tasks',event=>applySnapshot(event.detail));
+      applySnapshot(host.CHECKCOM_SHARED_SNAPSHOT);
+    }catch{records=[];render();$('updated').textContent='เปิดผ่านศูนย์งาน CheckCom เพื่อเชื่อมต่อฐานกลาง';}
+  }else{refresh();setInterval(refresh,30000);}
 </script>
 </body>
 </html>
+

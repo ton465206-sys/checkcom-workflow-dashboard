@@ -3,6 +3,9 @@
   const key = 'checkcom-assistant-tasks-v1';
   let tasks = [];
   let pending = null;
+  let commandRevision = 0;
+  let readRevision = 0;
+  let writing = false;
   let voiceReply = false;
   const history = [];
   const apiUrl = (window.CHECKCOM_API_URL || '').replace(/\/$/, '');
@@ -29,38 +32,74 @@
   async function refreshLocal() { if (localSync) { const response = await fetch('/api/tasks'); tasks = (await response.json()).tasks; } else if (publicSync) { const response = await fetch('data/tasks.json?now=' + Date.now(), { cache: 'no-store' }); if (response.ok) tasks = await response.json(); } }
   async function changeLocal(payload) { if (localSync) { const response = await fetch('/api/tasks', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(payload) }); if (!response.ok) throw new Error('บันทึกงานไม่สำเร็จ'); tasks = (await response.json()).tasks; } else save(); }
   async function callApi(path, payload, method = 'POST') {
-    const response = await fetch(apiUrl + path, { method, headers: { 'content-type': 'application/json', 'x-access-code': $('access-code').value }, ...(method === 'GET' ? {} : { body: JSON.stringify(payload) }), cache: 'no-store' });
-    const data = await response.json();
-    if (!response.ok) { const error = new Error(response.status === 409 ? 'ข้อมูลถูกแก้จากอีกช่องทางแล้ว โหลดข้อมูลล่าสุดและเลือกคำสั่งใหม่อีกครั้ง' : data.error || 'บริการขัดข้อง'); error.status = response.status; throw error; }
-    return data;
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 15000);
+    try {
+      const response = await fetch(apiUrl + path, { method, headers: { 'content-type': 'application/json', 'x-access-code': $('access-code').value }, ...(method === 'GET' ? {} : { body: JSON.stringify(payload) }), cache: 'no-store', signal: controller.signal });
+      let data;
+      try { data = await response.json(); } catch { data = null; }
+      if (!response.ok) { const error = new Error(response.status === 409 ? 'ข้อมูลถูกแก้จากอีกช่องทางแล้ว โหลดข้อมูลล่าสุดและเลือกคำสั่งใหม่อีกครั้ง' : data?.error || `บริการขัดข้อง (HTTP ${response.status})`); error.status = response.status; throw error; }
+      if (!data || typeof data !== 'object') throw new Error('API ตอบกลับไม่ถูกต้อง กรุณาตรวจรายการล่าสุดก่อนลองใหม่');
+      return data;
+    } catch (error) {
+      if (controller.signal.aborted) throw new Error('การเชื่อมต่อหมดเวลา กรุณาตรวจรายการล่าสุดก่อนลองใหม่');
+      throw error;
+    } finally { clearTimeout(timeout); }
+  }
+  function publishShared(state = 'ready') {
+    if (!apiUrl) return;
+    window.CHECKCOM_SHARED_SNAPSHOT = { tasks: structuredClone(tasks), state };
+    window.dispatchEvent(new CustomEvent('checkcom-tasks', { detail: window.CHECKCOM_SHARED_SNAPSHOT }));
+  }
+  function invalidateCommand() { commandRevision++; pending = null; $('confirm').hidden = true; }
+  function commandScope() {
+    const revision = commandRevision, code = $('access-code').value;
+    return () => revision === commandRevision && code === $('access-code').value;
   }
   async function refreshShared() {
-    const data = await callApi('/tasks', undefined, 'GET');
-    if (!Array.isArray(data.tasks)) throw new Error('ข้อมูลรายการงานจาก API ไม่ถูกต้อง');
-    tasks = data.tasks;
+    const revision = ++readRevision, code = $('access-code').value;
+    try {
+      const data = await callApi('/tasks', undefined, 'GET');
+      if (revision !== readRevision || code !== $('access-code').value) return tasks;
+      if (!Array.isArray(data.tasks) || data.tasks.some(task => !task || !Number.isSafeInteger(task.id) || typeof task.title !== 'string') || new Set(data.tasks.map(task => task.id)).size !== data.tasks.length) throw new Error('ข้อมูลรายการงานจาก API ไม่ถูกต้อง');
+      tasks = data.tasks;
+      publishShared();
+    } catch (error) {
+      if (revision !== readRevision || code !== $('access-code').value) return tasks;
+      if (error.status === 401 || error.status === 403) { tasks = []; invalidateCommand(); render(); }
+      publishShared('error');
+      throw error;
+    }
     return tasks;
   }
-  function confirmShared(message, task, expectedVersion) {
+  function confirmShared(message, task, expectedVersion, isCurrent = commandScope()) {
     // Capture the approved version and preserve every existing task field.
     const payload = { request_id: crypto.randomUUID(), task: { ...task }, ...(expectedVersion === undefined ? {} : { expected_version: expectedVersion }) };
     confirm(message, async () => {
+      if (!isCurrent() || writing) return;
+      writing = true;
       try {
         await callApi('/tasks/write', payload);
+        if (!isCurrent()) return;
         try { await refreshShared(); render(); say('บันทึกในฐานข้อมูลกลางแล้ว'); }
         catch { say('บันทึกในฐานข้อมูลกลางแล้ว แต่โหลดรายการล่าสุดไม่สำเร็จ กรุณารีเฟรช'); }
       } catch (error) {
+        if (!isCurrent()) return;
         if (error.status === 409) { try { await refreshShared(); render(); } catch {} }
-        say(error.message);
-      }
+        say(error.status ? error.message : 'ยังยืนยันผลการบันทึกไม่ได้ กรุณาโหลดรายการล่าสุดและตรวจสอบก่อนส่งซ้ำ');
+      } finally { writing = false; }
     });
   }
   async function runShared(raw) {
     // A new command invalidates an older unconfirmed operation.
-    pending = null; $('confirm').hidden = true;
+    if (writing) return say('กำลังบันทึก กรุณารอผลก่อนสั่งงานถัดไป');
+    invalidateCommand();
+    const isCurrent = commandScope();
     if (!$('access-code').value.trim()) return say('กรุณาใส่รหัสเข้าใช้งาน');
     const command = raw.trim();
     if (!command) return say('กรุณาพูดหรือพิมพ์คำสั่ง');
-    try { await refreshShared(); } catch (error) { return say(error.message); }
+    try { await refreshShared(); } catch (error) { if (isCurrent()) say(error.message); else if (error.status === 401 || error.status === 403) say(error.message); return; }
+    if (!isCurrent()) return;
     const add = command.match(/^(?:เพิ่มงาน|สร้างงาน|จดงาน|ເພີ່ມວຽກ)\s+(.+)$/i);
     if (add) return confirmShared(`เพิ่มงาน “${add[1]}” ใช่ไหม`, { title: add[1], status: 'รอดำเนินการ' });
     const search = command.match(/^(?:ค้นงาน|หางาน|ค้นหา|ຄົ້ນຫາ)\s+(.+)$/i);
@@ -95,22 +134,30 @@
       return confirmShared(label, next, current.version);
     }
     if (/^(?:สรุปงาน|ดูงาน|รายการงาน|ສະຫຼຸບວຽກ)$/i.test(command)) { render(); return say(`มี ${tasks.length} งาน เสร็จแล้ว ${tasks.filter(task => task.status === 'เสร็จแล้ว').length} งาน`); }
-    return runAi(command);
+    return runAi(command, isCurrent);
   }
-  async function runAi(command) {
+  async function runAi(command, isCurrent = commandScope()) {
     if (!$('access-code').value) return say('กรุณาใส่รหัสเข้าใช้งาน AI');
     $('voice-result').textContent = 'กำลังประมวลผลคำสั่ง...';
     try {
       const data = await callApi('/chat', { message: command, history: history.slice(-6) });
+      if (!isCurrent()) return;
       history.push({ user: command, assistant: data.reply });
       if (data.page) document.querySelector(`[data-page="${data.page}"]`)?.click();
       if (data.tasks) render(data.tasks);
       say(data.reply);
       if (data.confirmation_token) confirm(data.reply, async () => {
-        try { const result = await callApi('/confirm', { token: data.confirmation_token }); await refreshShared(); render(); say(result.reply); }
-        catch (error) { say(error.message); }
+        if (!isCurrent() || writing) return;
+        writing = true;
+        try {
+          const result = await callApi('/confirm', { token: data.confirmation_token });
+          if (!isCurrent()) return;
+          try { await refreshShared(); render(); say(result.reply); }
+          catch { say('บันทึกในฐานข้อมูลกลางแล้ว แต่โหลดรายการล่าสุดไม่สำเร็จ กรุณารีเฟรช'); }
+        } catch (error) { if (isCurrent()) say(error.status ? error.message : 'ยังยืนยันผลการบันทึกไม่ได้ กรุณาโหลดรายการล่าสุดและตรวจสอบก่อนส่งซ้ำ'); }
+        finally { writing = false; }
       });
-    } catch (error) { say(error.message); }
+    } catch (error) { if (isCurrent()) say(error.message); }
   }
   function render(items = tasks) {
     $('tasks').hidden = false;
@@ -124,7 +171,7 @@
   $('task-filter')?.addEventListener('input', () => render());
   function confirm(message, action) { pending = action; $('confirm-text').textContent = message; $('confirm').hidden = false; }
   $('confirm-yes').onclick = async () => { const action = pending; pending = null; $('confirm').hidden = true; try { if (action) await action(); } catch (error) { say(error.message); } };
-  $('confirm-no').onclick = () => { pending = null; $('confirm').hidden = true; say('ยกเลิกแล้ว'); };
+  $('confirm-no').onclick = () => { invalidateCommand(); say('ยกเลิกแล้ว'); };
   async function run(raw) {
     try { await refreshLocal(); } catch { return say('โหลดงานในเครื่องไม่สำเร็จ'); }
     const command = raw.trim();
@@ -145,11 +192,15 @@
     say('ยังไม่เข้าใจคำสั่ง ลอง “เพิ่มงาน …”, “ค้นงาน …”, “ปิดงาน 1”, “สรุปงาน” หรือ “เปิดแดชบอร์ด”');
   }
   const dispatch = command => apiUrl ? runShared(command) : run(command);
+  function resetSharedSession() {
+    invalidateCommand(); readRevision++; history.length = 0; tasks = []; render(); publishShared('waiting');
+  }
   const connectButton = $('connect-api');
   if (connectButton) {
     connectButton.hidden = !apiUrl;
     connectButton.onclick = async () => {
       if (!$('access-code').value.trim()) return say('ใส่รหัสเข้าใช้งานฐานกลางก่อน');
+      resetSharedSession();
       sessionStorage.setItem('checkcom-access-code', $('access-code').value);
       try { await refreshShared(); render(); say('เชื่อมต่อฐานกลางแล้ว เลือกค้นงานหรือพิมพ์คำสั่งได้เลย'); }
       catch (error) { say(error.message); }
@@ -160,10 +211,12 @@
   if (!apiUrl) say(publicSync ? 'ค้นชื่อองค์กรและดูขั้นตอนได้ที่นี่ อัปเดตขั้นตอนด้วยบอต Telegram' : localSync ? 'ใช้คำสั่งพื้นฐาน ข้อมูลงานซิงก์กับบอต Telegram บนเครื่องนี้' : 'AI สนทนายังไม่เชื่อมต่อ ตอนนี้ใช้คำสั่งพื้นฐาน ข้อมูลงานเก็บเฉพาะเบราว์เซอร์นี้');
   if (apiUrl) {
     $('access-code').value = sessionStorage.getItem('checkcom-access-code') || '';
-    $('access-code').addEventListener('change', () => { pending = null; $('confirm').hidden = true; tasks = []; render(); sessionStorage.setItem('checkcom-access-code', $('access-code').value); if ($('access-code').value.trim()) refreshShared().then(() => { render(); say('เชื่อมต่อฐานข้อมูลกลางแล้ว'); }).catch(error => say(error.message)); });
+    publishShared('waiting');
+    $('access-code').addEventListener('input', resetSharedSession);
+    $('access-code').addEventListener('change', () => { resetSharedSession(); sessionStorage.setItem('checkcom-access-code', $('access-code').value); if ($('access-code').value.trim()) refreshShared().then(() => { render(); say('เชื่อมต่อฐานข้อมูลกลางแล้ว'); }).catch(error => say(error.message)); });
     if ($('access-code').value.trim()) refreshShared().then(() => { render(); say('เชื่อมต่อฐานข้อมูลกลางแล้ว'); }).catch(error => say(error.message));
     else say('ใส่รหัสเข้าใช้งานเพื่ออ่านและแก้งานร่วมกับ Telegram');
-    setInterval(() => { if ($('access-code').value.trim()) refreshShared().then(() => render()).catch(error => say(error.message)); }, 30000);
+    setInterval(() => { if (!writing && $('access-code').value.trim()) refreshShared().then(() => render()).catch(error => say(error.message)); }, 30000);
   } else {
     if (localSync || publicSync) refreshLocal().then(() => render()).catch(() => {});
     if (publicSync) setInterval(() => refreshLocal().then(() => render()).catch(() => {}), 30000);
@@ -178,3 +231,4 @@
     recognition.start();
   };
 })();
+
