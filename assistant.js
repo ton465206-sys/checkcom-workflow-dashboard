@@ -6,6 +6,12 @@
   let voiceReply = false;
   const history = [];
   const apiUrl = (window.CHECKCOM_API_URL || '').replace(/\/$/, '');
+  const dashboardListeners = new Set();
+  let dashboardState = {tasks: [], connected: false, error: 'ໃສ່ລະຫັດ ແລະເຊື່ອມຕໍ່ຖານກາງຢູ່ດ້ານເທິງ'};
+  function broadcastDashboard(state) {
+    dashboardState = state;
+    for (const listener of dashboardListeners) { try { listener(structuredClone(state)); } catch {} }
+  }
   if (!apiUrl) { try { tasks = JSON.parse(localStorage.getItem(key) || '[]'); } catch { tasks = []; } }
   const localSync = location.hostname === '127.0.0.1' && location.port === '8765';
   const publicSync = location.hostname.endsWith('.github.io');
@@ -35,10 +41,18 @@
     return data;
   }
   async function refreshShared() {
-    const data = await callApi('/tasks', undefined, 'GET');
-    if (!Array.isArray(data.tasks)) throw new Error('ข้อมูลรายการงานจาก API ไม่ถูกต้อง');
-    tasks = data.tasks;
-    return tasks;
+    try {
+      if (!apiUrl || !$('access-code').value.trim()) throw new Error('ໃສ່ລະຫັດເຂົ້າໃຊ້ຖານກາງຢູ່ໜ້າຫຼັກ');
+      const data = await callApi('/tasks', undefined, 'GET');
+      if (!Array.isArray(data.tasks)) throw new Error('ข้อมูลรายการงานจาก API ไม่ถูกต้อง');
+      tasks = data.tasks;
+      broadcastDashboard({tasks, connected: true, error: ''});
+      return tasks;
+    } catch (error) {
+      tasks = [];
+      broadcastDashboard({tasks: [], connected: false, error: error.message});
+      throw error;
+    }
   }
   function confirmShared(message, task, expectedVersion) {
     // Capture the approved version and preserve every existing task field.
@@ -145,6 +159,29 @@
     say('ยังไม่เข้าใจคำสั่ง ลอง “เพิ่มงาน …”, “ค้นงาน …”, “ปิดงาน 1”, “สรุปงาน” หรือ “เปิดแดชบอร์ด”');
   }
   const dispatch = command => apiUrl ? runShared(command) : run(command);
+  window.CheckComTaskGateway = {
+    read: async () => structuredClone(await refreshShared()),
+    subscribe(listener) {
+      dashboardListeners.add(listener);
+      listener(structuredClone(dashboardState));
+      return () => dashboardListeners.delete(listener);
+    },
+    async write(task, expectedVersion) {
+      if (!apiUrl || !$('access-code').value.trim()) throw new Error('ເຊື່ອມຕໍ່ຖານກາງກ່ອນບັນທຶກ');
+      try {
+        const result = await callApi('/tasks/write', {request_id: crypto.randomUUID(), task, ...(task.id ? {expected_version: expectedVersion} : {})});
+        tasks = result.tasks;
+        broadcastDashboard({tasks, connected: true, error: ''});
+        render();
+        return structuredClone(result);
+      } catch (error) {
+        if (error.status === 409) { try { await refreshShared(); } catch {} }
+        else if (error.status === 401 || error.status === 403) { tasks = []; broadcastDashboard({tasks: [], connected: false, error: error.message}); }
+        throw error;
+      }
+    }
+  };
+  window.dispatchEvent?.(new Event('checkcom-gateway-ready'));
   const connectButton = $('connect-api');
   if (connectButton) {
     connectButton.hidden = !apiUrl;
@@ -160,7 +197,7 @@
   if (!apiUrl) say(publicSync ? 'ค้นชื่อองค์กรและดูขั้นตอนได้ที่นี่ อัปเดตขั้นตอนด้วยบอต Telegram' : localSync ? 'ใช้คำสั่งพื้นฐาน ข้อมูลงานซิงก์กับบอต Telegram บนเครื่องนี้' : 'AI สนทนายังไม่เชื่อมต่อ ตอนนี้ใช้คำสั่งพื้นฐาน ข้อมูลงานเก็บเฉพาะเบราว์เซอร์นี้');
   if (apiUrl) {
     $('access-code').value = sessionStorage.getItem('checkcom-access-code') || '';
-    $('access-code').addEventListener('change', () => { pending = null; $('confirm').hidden = true; tasks = []; render(); sessionStorage.setItem('checkcom-access-code', $('access-code').value); if ($('access-code').value.trim()) refreshShared().then(() => { render(); say('เชื่อมต่อฐานข้อมูลกลางแล้ว'); }).catch(error => say(error.message)); });
+    $('access-code').addEventListener('change', () => { pending = null; $('confirm').hidden = true; tasks = []; broadcastDashboard({tasks: [], connected: false, error: 'ກຳລັງເຊື່ອມຕໍ່'}); render(); sessionStorage.setItem('checkcom-access-code', $('access-code').value); if ($('access-code').value.trim()) refreshShared().then(() => { render(); say('เชื่อมต่อฐานข้อมูลกลางแล้ว'); }).catch(error => say(error.message)); });
     if ($('access-code').value.trim()) refreshShared().then(() => { render(); say('เชื่อมต่อฐานข้อมูลกลางแล้ว'); }).catch(error => say(error.message));
     else say('ใส่รหัสเข้าใช้งานเพื่ออ่านและแก้งานร่วมกับ Telegram');
     setInterval(() => { if ($('access-code').value.trim()) refreshShared().then(() => render()).catch(error => say(error.message)); }, 30000);

@@ -11,15 +11,29 @@ function setup({failRead=false,conflict=false}={}){
  const nodes=new Map(); const node=id=>{if(!nodes.has(id))nodes.set(id,{value:'',textContent:'',hidden:false,children:[],addEventListener(event,fn){this[event]=fn;},replaceChildren(){this.children=[];},append(...items){this.children.push(...items);},style:{}});return nodes.get(id);};
  node('access-code').value='';
  const requests=[];let current=structuredClone(fixture);let reads=0;let localReads=0;
- const context={window:{CHECKCOM_API_URL:'https://api.example.test'},location:{hostname:'site.github.io',port:''},document:{getElementById:node,createElement:()=>node('new-'+Math.random()),querySelector:()=>({click(){}})},localStorage:{getItem(){localReads++;return JSON.stringify([{id:999,title:'stale'}]);},setItem(){throw Error('Must not write local storage');}},sessionStorage:{getItem:()=>null,setItem(){}},crypto:webcrypto,Date,console,setInterval(){},navigator:{},fetch:async(url,options={})=>{
+ const context={window:{CHECKCOM_API_URL:'https://api.example.test'},location:{hostname:'site.github.io',port:''},document:{getElementById:node,createElement:()=>node('new-'+Math.random()),querySelector:()=>({click(){}})},localStorage:{getItem(){localReads++;return JSON.stringify([{id:999,title:'stale'}]);},setItem(){throw Error('Must not write local storage');}},sessionStorage:{getItem:()=>null,setItem(){}},crypto:webcrypto,structuredClone,Date,console,setInterval(){},navigator:{},fetch:async(url,options={})=>{
   requests.push({url,options});
   if(url.endsWith('/tasks')){reads++;return{ok:!failRead,status:failRead?401:200,json:async()=>failRead?{error:'Unauthorized'}:{tasks:[structuredClone(current)]}};}
   if(url.endsWith('/tasks/write')){const body=JSON.parse(options.body);if(conflict)return{ok:false,status:409,json:async()=>({error:'Version conflict'})};current={...body.task,id:body.task.id||8,version:4};return{ok:true,status:200,json:async()=>({task:current,tasks:[current]})};}
   throw Error('Unexpected endpoint '+url);
  }};
  vm.runInNewContext(source,context); node('access-code').value='secret';
- return {node,requests,get current(){return current;},get reads(){return reads;},get localReads(){return localReads;},async command(text){node('command').value=text;node('command-form').onsubmit({preventDefault(){}});await tick();},async yes(){await node('confirm-yes').onclick();await tick();},cancel(){node('confirm-no').onclick();}};
+ return {node,requests,gateway:context.window.CheckComTaskGateway,get current(){return current;},get reads(){return reads;},get localReads(){return localReads;},async command(text){node('command').value=text;node('command-form').onsubmit({preventDefault(){}});await tick();},async yes(){await node('confirm-yes').onclick();await tick();},cancel(){node('confirm-no').onclick();}};
 }
+
+test('embedded dashboards share refreshed records and writes without receiving credentials',async()=>{
+ const app=setup(),states=[];app.gateway.subscribe(state=>states.push(state));
+ await app.gateway.read();assert.equal(states.at(-1).connected,true);
+ const row=states.at(-1).tasks[0];const documents=[{id:'doc-test',title:'Proposal',url:'https://example.com/proposal'}];
+ await app.gateway.write({...row,documents},row.version);
+ assert.equal(states.at(-1).tasks[0].documents[0].title,'Proposal');
+ assert.equal(states.at(-1).tasks[0].contact_info,fixture.contact_info);
+ assert.equal(Object.hasOwn(states.at(-1),'access_code'),false);
+});
+test('embedded dashboard records clear on denied reads',async()=>{
+ const app=setup({failRead:true}),states=[];app.gateway.subscribe(state=>states.push(state));
+ await assert.rejects(()=>app.gateway.read());assert.equal(states.at(-1).connected,false);assert.equal(states.at(-1).tasks.length,0);
+});
 test('configured API never reads browser snapshot; confirmed update preserves all fields and refreshes',async()=>{
  const app=setup();await app.command('ปิดงาน 7');assert.equal(app.localReads,0);assert.equal(app.requests.length,1);assert.equal(app.node('confirm').hidden,false);await app.yes();
  const req=app.requests.find(x=>x.url.endsWith('/tasks/write'));const body=JSON.parse(req.options.body);assert.equal(body.expected_version,3);assert.ok(body.request_id);assert.equal(body.task.contact_info,fixture.contact_info);assert.deepEqual(body.task.custom_field,fixture.custom_field);assert.equal(body.task.status,'เสร็จแล้ว');assert.equal(app.reads,2);assert.match(app.node('voice-result').textContent,/บันทึกในฐานข้อมูลกลางแล้ว/);

@@ -110,6 +110,18 @@
       <p class="note muted">ກົດ “ເລືອກໂຟນເດີ” ເພື່ອເບິ່ງເອກະສານໃນເຄື່ອງຂອງທ່ານ. ຖ້າຕ້ອງການປ່ຽນຊື່/ລຶບຟາຍຈິງ ໃຫ້ກົດ “ເລືອກໂຟນເດີ”.</p>
     </aside>
     <main>
+      <section class="card panel" aria-label="ເອກະສານຖານກາງ" style="padding:18px;margin-bottom:20px">
+        <h2>ເອກະສານທີ່ຜູກກັບລູກຄ້າໃນຖານກາງ</h2>
+        <p id="centralDocStatus" role="status">ເຊື່ອມຕໍ່ຖານກາງຢູ່ໜ້າຫຼັກກ່ອນ</p>
+        <p class="note muted">ບັນທຶກຊື່ແລະລິ້ງເອກະສານຕາມລູກຄ້າ. ການເລືອກໂຟນເດີດ້ານລຸ່ມເປັນໄຟລ໌ໃນເຄື່ອງ ບໍ່ໄດ້ອັບໂຫຼດເຂົ້າຖານກາງ.</p>
+        <form id="centralDocForm" style="display:flex;gap:8px;flex-wrap:wrap;margin:12px 0">
+          <select id="centralDocTask" aria-label="ລູກຄ້າ / ວຽກ" required style="flex:2;min-width:220px"></select>
+          <input id="centralDocTitle" aria-label="ຊື່ເອກະສານ" placeholder="ຊື່ເອກະສານ" maxlength="200" required style="flex:1;min-width:180px">
+          <input id="centralDocUrl" type="url" aria-label="ລິ້ງເອກະສານ" placeholder="https://…" required style="flex:2;min-width:220px">
+          <button class="primary" id="centralDocAdd" type="submit" disabled>ຜູກເອກະສານ</button>
+        </form>
+        <div id="centralDocList"></div>
+      </section>
       <div class="topbar">
         <div>
           <h1>Document Manager Dashboard</h1>
@@ -151,6 +163,8 @@
     </main>
   </div>
   <dialog id="editDialog"><form method="dialog" class="modal"><div class="modal-head"><div><h2 id="editTitle">ແກ້ໄຂໄຟລ໌</h2><p id="editMeta" class="muted"></p></div><button class="icon" value="cancel" type="submit">×</button></div><textarea id="editor"></textarea><div class="actions"><button value="cancel" type="submit">ຍົກເລີກ</button><button id="saveEdit" class="primary" value="default" type="button">ບັນທຶກ</button></div></form></dialog>
+  <script src="../../shared-dashboard.js"></script>
+  <script src="central-documents.js"></script>
   <script>
     const preloadedDesktop = { files: [], groups: [] };
     const docExts = new Set(["doc","docx","xls","xlsx","ppt","pptx","pdf","txt","csv","md","rtf","html","htm","json","xml"]);

@@ -1,0 +1,5 @@
+import test from 'node:test';import assert from 'node:assert/strict';
+import {metrics,validDate,editedTask} from './model.mjs';
+test('counts reflect actual task states and followups after prior contact',()=>{assert.deepEqual(metrics([{checked:true,contacted:true,follow_up_date:'2026-10-20',status:'กำลังทำ'},{follow_up_date:'2026-10-20',status:'เสร็จแล้ว',blocker:'review'},{follow_up_date:'2026-10-28'}],'2026-10-27'),{total:3,checked:1,contacted:1,due:1,blocked:1});});
+test('calendar dates reject impossible days',()=>{assert.equal(validDate('2026-02-30'),false);assert.equal(validDate('2028-02-29'),true);assert.equal(validDate(''),true);});
+test('editing preserves identifiers, version and arbitrary fields',()=>{const original={id:142,version:8,title:'company',custom:{keep:true}};const task=editedTask(original,{follow_up_date:'2026-11-01',action_plan:'นัด Demo',contacted:true,checked:false});assert.equal(task.id,142);assert.equal(task.version,8);assert.deepEqual(task.custom,{keep:true});assert.equal(task.checked,true);assert.equal(original.checked,undefined);assert.throws(()=>editedTask(original,{follow_up_date:'2026-02-30'}));});
