@@ -160,6 +160,9 @@
   }
   const dispatch = command => apiUrl ? runShared(command) : run(command);
   window.CheckComTaskGateway = {
+    async readPerformance(period){if(!apiUrl||!$('access-code').value.trim())throw new Error('ເຊື່ອມຕໍ່ຖານກາງຢູ່ດ້ານເທິງກ່ອນ');return structuredClone(await callApi('/performance?period='+encodeURIComponent(period),undefined,'GET'));},
+    async performanceHistory(period){if(!apiUrl||!$('access-code').value.trim())throw new Error('ເຊື່ອມຕໍ່ຖານກາງກ່ອນ');return structuredClone(await callApi('/performance/history?period='+encodeURIComponent(period),undefined,'GET'));},
+    async writePerformance(payload){if(!apiUrl||!$('access-code').value.trim())throw new Error('ເຊື່ອມຕໍ່ຖານກາງກ່ອນ');return structuredClone(await callApi('/performance/write',payload));},
     read: async () => structuredClone(await refreshShared()),
     subscribe(listener) {
       dashboardListeners.add(listener);

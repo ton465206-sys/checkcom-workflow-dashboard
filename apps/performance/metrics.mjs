@@ -1,5 +1,5 @@
 export function attainment(actual,target,direction='high'){
- if(actual===null||actual===''||target===null||target===''||!Number.isFinite(Number(actual))||!Number.isFinite(Number(target))||actual<0||target<=0)return null;
+ if(actual===null||actual===''||target===null||target===''||!Number.isFinite(Number(actual))||!Number.isFinite(Number(target))||direction==='low'&&actual<0||target<=0)return null;
  return Math.min(100,Math.max(0,direction==='low'?(Number(actual)===0?100:target/actual*100):actual/target*100));
 }
 export function weighted(items,score){const total=items.reduce((n,x)=>n+Math.max(0,Number(x.weight)||0),0);const known=items.map(x=>({w:Math.max(0,Number(x.weight)||0),s:score(x)})).filter(x=>x.s!==null);const available=known.reduce((n,x)=>n+x.w,0);return {value:available?known.reduce((n,x)=>n+x.w*x.s,0)/available:null,coverage:total?available/total*100:0,weight:total};}
@@ -7,6 +7,7 @@ export const kpiScore=d=>weighted(d.kpis,k=>attainment(k.actual,k.target,k.direc
 export const taskScore=d=>weighted(d.tasks,t=>t.progress===null?null:Number(t.progress));
 export function department(d){const k=kpiScore(d),t=taskScore(d);const value=k.value===null||t.value===null||k.coverage<100||t.coverage<100?null:(k.value+t.value)/2;return {k,t,value};}
 export const tone=(v,green=90,amber=70)=>v===null?'missing':v>=green?'good':v>=amber?'amber':'red';
+export function emptyPeriod(){return seed().map(d=>({...d,owner:'',kpis:d.kpis.map(k=>({...k,actual:null,target:null})),tasks:d.tasks.map(({late,...t})=>({...t,progress:null,owner:'',due_date:'',evidence:''}))}));}
 const k=(name,unit,actual,target,direction,weight,formula)=>({name,unit,actual,target,direction,weight,formula});
 const t=(name,progress,weight,late=false)=>({name,progress,weight,late});
 export function seed(){return [
