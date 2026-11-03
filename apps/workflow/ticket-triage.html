@@ -1,0 +1,13 @@
+<!doctype html>
+<html lang="th">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src 'self'; style-src 'self' 'unsafe-inline'; object-src 'none'; base-uri 'none'; form-action 'none'"><title>CheckCom · Ticket Triage Prototype</title>
+<style>
+body{font:16px/1.6 system-ui,sans-serif;background:#f3f6fa;color:#183047;margin:0}main{max-width:1100px;margin:auto;padding:30px 20px}h1{margin-bottom:5px}p{margin-top:8px}.badge{display:inline-block;background:#e3eef9;border-radius:8px;padding:4px 10px}textarea{box-sizing:border-box;width:100%;min-height:260px;font:14px/1.5 monospace;padding:14px;border:1px solid #a8b9c9;border-radius:10px}button{padding:10px 16px;margin:12px 8px 12px 0;font:inherit;border:0;border-radius:8px;background:#145d93;color:white;cursor:pointer}button:disabled{opacity:.5}article{background:white;padding:20px;border:1px solid #d7e1eb;border-radius:12px;margin:16px 0;overflow-wrap:anywhere}h2{font-size:20px;margin:5px 0}.priority{font-weight:bold;color:#a12c21}pre{white-space:pre-wrap;overflow-wrap:anywhere}#message{font-weight:600}details{margin-top:12px}li{margin:10px 0}label{display:block;margin-top:20px}
+</style></head>
+<body><main><span class="badge">CHECKCOM · IT SUPPORT · PROTOTYPE</span><h1>คัดแยก Ticket เพื่อรอตรวจสอบ</h1>
+<p>วิเคราะห์ด้วยกฎภายในเครื่อง แสดงเหตุผลและวิธีตรวจสอบ ใช้ข้อมูลสมมติสำหรับทดสอบ ทุกผลลัพธ์ยังรอคนตรวจสอบ</p>
+<p>หน้านี้ไม่เชื่อม Production API และไม่มีปุ่มบันทึกเข้าฐานกลาง การดาวน์โหลดจะสร้างไฟล์ JSON ในเครื่องเท่านั้น</p>
+<label for="tickets">Ticket JSON (ข้อมูลสมมติ · ไม่เกิน 500 รายการ)</label><textarea id="tickets" spellcheck="false"></textarea>
+<div><button id="sample" type="button">โหลดตัวอย่าง 5 Ticket</button><button id="analyze" type="button">วิเคราะห์ Ticket</button><button id="download" type="button" disabled>ดาวน์โหลดผลลัพธ์ JSON</button></div>
+<p id="message" role="status" aria-live="polite">กำลังโหลดตัวอย่าง…</p><section id="results" aria-label="ผลการคัดแยก Ticket"></section>
+<script type="module" src="ticket-triage-ui.mjs"></script></main></body></html>

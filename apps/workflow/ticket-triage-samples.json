@@ -1,0 +1,35 @@
+[
+  {
+    "source": "synthetic-demo", "id": "DEMO-001", "title": "Internet down across demo site",
+    "description": "All demo workstations report an unavailable gateway. No real customer data.",
+    "service": "network", "environment": "production", "impact": "site", "affected_users": 50,
+    "business_blocked": true, "workaround_available": false, "service_unavailable": true,
+    "security_incident": false, "data_loss": false
+  },
+  {
+    "source": "synthetic-demo", "id": "DEMO-002", "title": "กล้อง demo ใช้งานไม่ได้หนึ่งตัว",
+    "description": "NVR demo แสดงกล้องหนึ่งตัว offline กล้องอื่นยังแสดงภาพตามปกติ",
+    "service": "cctv", "environment": "test", "impact": "single", "affected_users": 1,
+    "business_blocked": false, "workaround_available": true, "service_unavailable": false,
+    "security_incident": false, "data_loss": false
+  },
+  {
+    "source": "synthetic-demo", "id": "DEMO-003", "title": "ວິທີຕັ້ງຄ່າ Wi-Fi ສຳລັບຫ້ອງທົດລອງ",
+    "description": "ຂໍຄູ່ມືຕັ້ງຄ່າໃນ Lab; ລະບົບຍັງໃຊ້ງານໄດ້",
+    "service": "network", "environment": "test", "impact": "single", "affected_users": 1,
+    "business_blocked": false, "workaround_available": true, "service_unavailable": false,
+    "security_incident": false, "data_loss": false
+  },
+  {
+    "source": "synthetic-demo", "id": "DEMO-004", "title": "Printer issue — impact not provided",
+    "description": "Please investigate the demo printer. Scope and workaround are not yet known.",
+    "service": "workstation"
+  },
+  {
+    "source": "synthetic-demo", "id": "DEMO-005", "title": "API error blocks demo team",
+    "description": "The demo application cannot sync test records; no workaround is available.",
+    "service": "application", "environment": "test", "impact": "team", "affected_users": 8,
+    "business_blocked": true, "workaround_available": false, "service_unavailable": false,
+    "security_incident": false, "data_loss": false
+  }
+]
