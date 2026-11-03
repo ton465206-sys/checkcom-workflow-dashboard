@@ -1,0 +1,337 @@
+{
+  "tasks": [
+    {
+      "title": "IT Support · DEMO-001 · Internet down across demo site",
+      "department": "Technical",
+      "owner": "",
+      "status": "รอตรวจสอบ",
+      "stage": "Ticket triage review",
+      "priority": "P1",
+      "category": "performance",
+      "service": "network",
+      "next_action": "Escalate the reported production outage to the IT Support lead before investigating; confirm the affected site and available continuity procedure.",
+      "follow_up_date": "",
+      "action_plan": "1. Escalate the reported production outage to the IT Support lead before investigating; confirm the affected site and available continuity procedure.\nVerify: Record lead acknowledgement, affected service and incident reference; priority remains a proposal until reviewed.\n2. Inspect authorized switch/AP link, PoE and port status; compare affected and working devices.\nVerify: Record port/link indicators and whether the failure follows one device, AP, VLAN or whole site.\n3. Inspect assigned IP, DHCP lease, gateway and DNS settings; compare with the approved network design.\nVerify: Record which layer differs from a working device; redact addresses or logs before sharing outside the team.\n4. Propose a reversible fix only after the failing component is verified; obtain reviewer approval before configuration changes, restart, reset or remote execution.\nVerify: Record approved change, rollback plan and a before/after functional check.",
+      "department_plugin": {
+        "plugin": "customer-support",
+        "skill": "ticket-triage",
+        "module": "technical",
+        "source_revision": "2574e29377c7173d0cecffef29a6ecbd7f8ccb5d",
+        "approval": "pending_review"
+      },
+      "ticket_triage": {
+        "version": "1.0.0",
+        "mode": "offline-rules",
+        "key": "ticket-triage:synthetic-demo:DEMO-001",
+        "source": "synthetic-demo",
+        "ticket_id": "DEMO-001",
+        "input_signature": "{\"source\":\"synthetic-demo\",\"id\":\"DEMO-001\",\"title\":\"Internet down across demo site\",\"description\":\"All demo workstations report an unavailable gateway. No real customer data.\",\"service\":\"network\",\"environment\":\"production\",\"impact\":\"site\",\"affected_users\":50,\"owner\":\"\",\"business_blocked\":true,\"workaround_available\":false,\"service_unavailable\":true,\"security_incident\":false,\"data_loss\":false}",
+        "category_rule": "CAT-TEXT-PERFORMANCE",
+        "category_evidence": {
+          "matched_text": "down"
+        },
+        "priority_rule": "PRI-PRODUCTION-OUTAGE",
+        "priority_reason": "Reported production outage affects a whole site or multiple sites.",
+        "priority_evidence": {
+          "environment": "production",
+          "service_unavailable": true,
+          "impact": "site"
+        },
+        "priority_provisional": false,
+        "missing_fields": [],
+        "route": "IT Support",
+        "steps": [
+          {
+            "action": "Escalate the reported production outage to the IT Support lead before investigating; confirm the affected site and available continuity procedure.",
+            "verify": "Record lead acknowledgement, affected service and incident reference; priority remains a proposal until reviewed.",
+            "requires_approval": false
+          },
+          {
+            "action": "Inspect authorized switch/AP link, PoE and port status; compare affected and working devices.",
+            "verify": "Record port/link indicators and whether the failure follows one device, AP, VLAN or whole site.",
+            "requires_approval": false
+          },
+          {
+            "action": "Inspect assigned IP, DHCP lease, gateway and DNS settings; compare with the approved network design.",
+            "verify": "Record which layer differs from a working device; redact addresses or logs before sharing outside the team.",
+            "requires_approval": false
+          },
+          {
+            "action": "Propose a reversible fix only after the failing component is verified; obtain reviewer approval before configuration changes, restart, reset or remote execution.",
+            "verify": "Record approved change, rollback plan and a before/after functional check.",
+            "requires_approval": true
+          }
+        ],
+        "evidence_status": "reported_not_verified",
+        "diagnosis": "unconfirmed",
+        "known_issue_check": "not_connected",
+        "resolution_status": "not_executed",
+        "external_connectors_enabled": false
+      }
+    },
+    {
+      "title": "IT Support · DEMO-004 · Printer issue — impact not provided",
+      "department": "Technical",
+      "owner": "",
+      "status": "รอตรวจสอบ",
+      "stage": "Ticket triage review",
+      "priority": "P2",
+      "category": "unknown",
+      "service": "workstation",
+      "next_action": "Request missing fields: environment, impact, business_blocked, workaround_available, service_unavailable, security_incident, data_loss, affected_users. Do not request passwords or access tokens.",
+      "follow_up_date": "",
+      "action_plan": "1. Request missing fields: environment, impact, business_blocked, workaround_available, service_unavailable, security_incident, data_loss, affected_users. Do not request passwords or access tokens.\nVerify: Support reviewer records the missing facts and reruns triage.\n2. Inspect existing error messages, timestamps and authorized application/device status; compare with a working session.\nVerify: Record reproducible symptoms and expected versus observed behavior without collecting credentials.\n3. Propose a reversible fix only after the failing component is verified; obtain reviewer approval before configuration changes, restart, reset or remote execution.\nVerify: Record approved change, rollback plan and a before/after functional check.",
+      "department_plugin": {
+        "plugin": "customer-support",
+        "skill": "ticket-triage",
+        "module": "technical",
+        "source_revision": "2574e29377c7173d0cecffef29a6ecbd7f8ccb5d",
+        "approval": "pending_review"
+      },
+      "ticket_triage": {
+        "version": "1.0.0",
+        "mode": "offline-rules",
+        "key": "ticket-triage:synthetic-demo:DEMO-004",
+        "source": "synthetic-demo",
+        "ticket_id": "DEMO-004",
+        "input_signature": "{\"source\":\"synthetic-demo\",\"id\":\"DEMO-004\",\"title\":\"Printer issue — impact not provided\",\"description\":\"Please investigate the demo printer. Scope and workaround are not yet known.\",\"service\":\"workstation\",\"environment\":\"unknown\",\"impact\":\"unknown\",\"affected_users\":null,\"owner\":\"\",\"business_blocked\":null,\"workaround_available\":null,\"service_unavailable\":null,\"security_incident\":null,\"data_loss\":null}",
+        "category_rule": "CAT-UNKNOWN",
+        "category_evidence": {},
+        "priority_rule": "PRI-PROVISIONAL",
+        "priority_reason": "Impact or classification needs verification; do not silently assign low priority.",
+        "priority_evidence": {
+          "missing_fields": [
+            "environment",
+            "impact",
+            "business_blocked",
+            "workaround_available",
+            "service_unavailable",
+            "security_incident",
+            "data_loss",
+            "affected_users"
+          ],
+          "category": "unknown"
+        },
+        "priority_provisional": true,
+        "missing_fields": [
+          "environment",
+          "impact",
+          "business_blocked",
+          "workaround_available",
+          "service_unavailable",
+          "security_incident",
+          "data_loss",
+          "affected_users"
+        ],
+        "route": "IT Support",
+        "steps": [
+          {
+            "action": "Request missing fields: environment, impact, business_blocked, workaround_available, service_unavailable, security_incident, data_loss, affected_users. Do not request passwords or access tokens.",
+            "verify": "Support reviewer records the missing facts and reruns triage.",
+            "requires_approval": false
+          },
+          {
+            "action": "Inspect existing error messages, timestamps and authorized application/device status; compare with a working session.",
+            "verify": "Record reproducible symptoms and expected versus observed behavior without collecting credentials.",
+            "requires_approval": false
+          },
+          {
+            "action": "Propose a reversible fix only after the failing component is verified; obtain reviewer approval before configuration changes, restart, reset or remote execution.",
+            "verify": "Record approved change, rollback plan and a before/after functional check.",
+            "requires_approval": true
+          }
+        ],
+        "evidence_status": "reported_not_verified",
+        "diagnosis": "unconfirmed",
+        "known_issue_check": "not_connected",
+        "resolution_status": "not_executed",
+        "external_connectors_enabled": false
+      }
+    },
+    {
+      "title": "IT Support · DEMO-005 · API error blocks demo team",
+      "department": "Technical",
+      "owner": "",
+      "status": "รอตรวจสอบ",
+      "stage": "Ticket triage review",
+      "priority": "P2",
+      "category": "integration",
+      "service": "application",
+      "next_action": "Inspect existing error messages, timestamps and authorized application/device status; compare with a working session.",
+      "follow_up_date": "",
+      "action_plan": "1. Inspect existing error messages, timestamps and authorized application/device status; compare with a working session.\nVerify: Record reproducible symptoms and expected versus observed behavior without collecting credentials.\n2. Propose a reversible fix only after the failing component is verified; obtain reviewer approval before configuration changes, restart, reset or remote execution.\nVerify: Record approved change, rollback plan and a before/after functional check.",
+      "department_plugin": {
+        "plugin": "customer-support",
+        "skill": "ticket-triage",
+        "module": "technical",
+        "source_revision": "2574e29377c7173d0cecffef29a6ecbd7f8ccb5d",
+        "approval": "pending_review"
+      },
+      "ticket_triage": {
+        "version": "1.0.0",
+        "mode": "offline-rules",
+        "key": "ticket-triage:synthetic-demo:DEMO-005",
+        "source": "synthetic-demo",
+        "ticket_id": "DEMO-005",
+        "input_signature": "{\"source\":\"synthetic-demo\",\"id\":\"DEMO-005\",\"title\":\"API error blocks demo team\",\"description\":\"The demo application cannot sync test records; no workaround is available.\",\"service\":\"application\",\"environment\":\"test\",\"impact\":\"team\",\"affected_users\":8,\"owner\":\"\",\"business_blocked\":true,\"workaround_available\":false,\"service_unavailable\":false,\"security_incident\":false,\"data_loss\":false}",
+        "category_rule": "CAT-TEXT-INTEGRATION",
+        "category_evidence": {
+          "matched_text": "API"
+        },
+        "priority_rule": "PRI-BLOCKED",
+        "priority_reason": "Reported blocked work has no confirmed workaround or broad impact.",
+        "priority_evidence": {
+          "business_blocked": true,
+          "workaround_available": false,
+          "impact": "team",
+          "affected_users": 8
+        },
+        "priority_provisional": false,
+        "missing_fields": [],
+        "route": "IT Support",
+        "steps": [
+          {
+            "action": "Inspect existing error messages, timestamps and authorized application/device status; compare with a working session.",
+            "verify": "Record reproducible symptoms and expected versus observed behavior without collecting credentials.",
+            "requires_approval": false
+          },
+          {
+            "action": "Propose a reversible fix only after the failing component is verified; obtain reviewer approval before configuration changes, restart, reset or remote execution.",
+            "verify": "Record approved change, rollback plan and a before/after functional check.",
+            "requires_approval": true
+          }
+        ],
+        "evidence_status": "reported_not_verified",
+        "diagnosis": "unconfirmed",
+        "known_issue_check": "not_connected",
+        "resolution_status": "not_executed",
+        "external_connectors_enabled": false
+      }
+    },
+    {
+      "title": "IT Support · DEMO-002 · กล้อง demo ใช้งานไม่ได้หนึ่งตัว",
+      "department": "Technical",
+      "owner": "",
+      "status": "รอตรวจสอบ",
+      "stage": "Ticket triage review",
+      "priority": "P3",
+      "category": "bug",
+      "service": "cctv",
+      "next_action": "Inspect authorized camera/NVR online state, PoE/link status, recorder clock and storage health without changing configuration.",
+      "follow_up_date": "",
+      "action_plan": "1. Inspect authorized camera/NVR online state, PoE/link status, recorder clock and storage health without changing configuration.\nVerify: Record affected camera labels, timestamps and live-view versus recording results; do not export identifiable footage.\n2. Propose a reversible fix only after the failing component is verified; obtain reviewer approval before configuration changes, restart, reset or remote execution.\nVerify: Record approved change, rollback plan and a before/after functional check.",
+      "department_plugin": {
+        "plugin": "customer-support",
+        "skill": "ticket-triage",
+        "module": "technical",
+        "source_revision": "2574e29377c7173d0cecffef29a6ecbd7f8ccb5d",
+        "approval": "pending_review"
+      },
+      "ticket_triage": {
+        "version": "1.0.0",
+        "mode": "offline-rules",
+        "key": "ticket-triage:synthetic-demo:DEMO-002",
+        "source": "synthetic-demo",
+        "ticket_id": "DEMO-002",
+        "input_signature": "{\"source\":\"synthetic-demo\",\"id\":\"DEMO-002\",\"title\":\"กล้อง demo ใช้งานไม่ได้หนึ่งตัว\",\"description\":\"NVR demo แสดงกล้องหนึ่งตัว offline กล้องอื่นยังแสดงภาพตามปกติ\",\"service\":\"cctv\",\"environment\":\"test\",\"impact\":\"single\",\"affected_users\":1,\"owner\":\"\",\"business_blocked\":false,\"workaround_available\":true,\"service_unavailable\":false,\"security_incident\":false,\"data_loss\":false}",
+        "category_rule": "CAT-TEXT-BUG",
+        "category_evidence": {
+          "matched_text": "ใช้งานไม่ได้"
+        },
+        "priority_rule": "PRI-LIMITED",
+        "priority_reason": "No reported critical trigger; limited impact or available workaround.",
+        "priority_evidence": {
+          "impact": "single",
+          "workaround_available": true
+        },
+        "priority_provisional": false,
+        "missing_fields": [],
+        "route": "IT Support",
+        "steps": [
+          {
+            "action": "Inspect authorized camera/NVR online state, PoE/link status, recorder clock and storage health without changing configuration.",
+            "verify": "Record affected camera labels, timestamps and live-view versus recording results; do not export identifiable footage.",
+            "requires_approval": false
+          },
+          {
+            "action": "Propose a reversible fix only after the failing component is verified; obtain reviewer approval before configuration changes, restart, reset or remote execution.",
+            "verify": "Record approved change, rollback plan and a before/after functional check.",
+            "requires_approval": true
+          }
+        ],
+        "evidence_status": "reported_not_verified",
+        "diagnosis": "unconfirmed",
+        "known_issue_check": "not_connected",
+        "resolution_status": "not_executed",
+        "external_connectors_enabled": false
+      }
+    },
+    {
+      "title": "IT Support · DEMO-003 · ວິທີຕັ້ງຄ່າ Wi-Fi ສຳລັບຫ້ອງທົດລອງ",
+      "department": "Technical",
+      "owner": "",
+      "status": "รอตรวจสอบ",
+      "stage": "Ticket triage review",
+      "priority": "P4",
+      "category": "how-to",
+      "service": "network",
+      "next_action": "Inspect authorized switch/AP link, PoE and port status; compare affected and working devices.",
+      "follow_up_date": "",
+      "action_plan": "1. Inspect authorized switch/AP link, PoE and port status; compare affected and working devices.\nVerify: Record port/link indicators and whether the failure follows one device, AP, VLAN or whole site.\n2. Inspect assigned IP, DHCP lease, gateway and DNS settings; compare with the approved network design.\nVerify: Record which layer differs from a working device; redact addresses or logs before sharing outside the team.\n3. Propose a reversible fix only after the failing component is verified; obtain reviewer approval before configuration changes, restart, reset or remote execution.\nVerify: Record approved change, rollback plan and a before/after functional check.",
+      "department_plugin": {
+        "plugin": "customer-support",
+        "skill": "ticket-triage",
+        "module": "technical",
+        "source_revision": "2574e29377c7173d0cecffef29a6ecbd7f8ccb5d",
+        "approval": "pending_review"
+      },
+      "ticket_triage": {
+        "version": "1.0.0",
+        "mode": "offline-rules",
+        "key": "ticket-triage:synthetic-demo:DEMO-003",
+        "source": "synthetic-demo",
+        "ticket_id": "DEMO-003",
+        "input_signature": "{\"source\":\"synthetic-demo\",\"id\":\"DEMO-003\",\"title\":\"ວິທີຕັ້ງຄ່າ Wi-Fi ສຳລັບຫ້ອງທົດລອງ\",\"description\":\"ຂໍຄູ່ມືຕັ້ງຄ່າໃນ Lab; ລະບົບຍັງໃຊ້ງານໄດ້\",\"service\":\"network\",\"environment\":\"test\",\"impact\":\"single\",\"affected_users\":1,\"owner\":\"\",\"business_blocked\":false,\"workaround_available\":true,\"service_unavailable\":false,\"security_incident\":false,\"data_loss\":false}",
+        "category_rule": "CAT-TEXT-HOW-TO",
+        "category_evidence": {
+          "matched_text": "ວິທີ"
+        },
+        "priority_rule": "PRI-QUESTION",
+        "priority_reason": "Non-blocking guidance or enhancement request.",
+        "priority_evidence": {
+          "category": "how-to",
+          "business_blocked": false,
+          "service_unavailable": false
+        },
+        "priority_provisional": false,
+        "missing_fields": [],
+        "route": "IT Support",
+        "steps": [
+          {
+            "action": "Inspect authorized switch/AP link, PoE and port status; compare affected and working devices.",
+            "verify": "Record port/link indicators and whether the failure follows one device, AP, VLAN or whole site.",
+            "requires_approval": false
+          },
+          {
+            "action": "Inspect assigned IP, DHCP lease, gateway and DNS settings; compare with the approved network design.",
+            "verify": "Record which layer differs from a working device; redact addresses or logs before sharing outside the team.",
+            "requires_approval": false
+          },
+          {
+            "action": "Propose a reversible fix only after the failing component is verified; obtain reviewer approval before configuration changes, restart, reset or remote execution.",
+            "verify": "Record approved change, rollback plan and a before/after functional check.",
+            "requires_approval": true
+          }
+        ],
+        "evidence_status": "reported_not_verified",
+        "diagnosis": "unconfirmed",
+        "known_issue_check": "not_connected",
+        "resolution_status": "not_executed",
+        "external_connectors_enabled": false
+      }
+    }
+  ],
+  "errors": [],
+  "duplicates": [],
+  "conflicts": []
+}
